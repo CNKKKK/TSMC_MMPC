@@ -1091,6 +1091,8 @@ end
 %     h=[Vb Ic1 da sita k]; 
 % end
 
+Vd=[0 0 0 0 0 0];%%%%recliter turn off
+
 if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(da*Da1))
     h=[Va Ia1 da 1 k];
 elseif(rem(t,2*Ts)>=(Ts*(da*Da1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1))
@@ -1100,9 +1102,9 @@ elseif(rem(t,2*Ts)>=(Ts*(da*Da1+da*Db1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1+db*Db1))
 elseif(rem(t,2*Ts)>=(Ts*(da*Da1+da*Db1+db*Db1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1+db*Db1+db*Da1))
     h=[Vb Ia1 da 4 k];
 elseif(rem(t,2*Ts)>=Ts*(da*Da1+da*Db1+db*Db1+db*Da1)&&rem(t,2*Ts)<Ts)
-    h=[Vc Ic1 da 5 k];
+    h=[Vd Ic1 da 5 k];
 elseif(rem(t,2*Ts)>=Ts&&rem(t,2*Ts)<Ts+Ts*dc)
-    h=[Vc Id1 da 6 k];
+    h=[Vd Id1 da 6 k];
 elseif(rem(t,2*Ts)>=(Ts+Ts*dc)&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1)))
     h=[Vb Ib1 da 7 k];
 elseif(rem(t,2*Ts)>=(Ts+Ts*(dc+db*Da1))&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1+db*Db1)))
