@@ -39,7 +39,7 @@ function sys=mdlOutputs(t,x,u)
 
 
 Us_A=u(1);Us_B=u(2); Us_C=u(3);
-Is_A_1=u(4); Is_B_1=u(5); Is_C_1=u(6);
+Is_A=u(4); Is_B=u(5); Is_C=u(6);
 Uc_A_1=u(7); Uc_B_1=u(8); Uc_C_1=u(9);%%%%%%kshik
 Io_A_1=u(10); Io_B_1=u(11); Io_C_1=u(12);
 Io_A_g=u(13); Io_B_g=u(14); Io_C_g=u(15);
@@ -75,7 +75,7 @@ Ts=0.00005;Rf=0.5; Lf=0.0004; Cf=21e-6; Rs=2; Ls=0.02;%%若修改周期求取Is（K+1)的
 % % Uc_C_1=0.9261*Uc_C+1.9431*Is_C+0.0739*Us_C-1.9505*Ic_C;
 % %%%%%时延补偿
 Uc_alphar_1=(2/3)* (Uc_A_1-(1/2)*Uc_B_1-(1/2)*Uc_C_1);      Uc_beta_1=(2/3)*(sqrt(3)/2)*(Uc_B_1-Uc_C_1);
-
+Is_alphar=(2/3)* (Is_A-(1/2)*Is_B-(1/2)*Is_C);      Is_beta=(2/3)*(sqrt(3)/2)*(Is_B-Is_C);
 sita=atan(Uc_beta_1/Uc_alphar_1);
 
 % % Is_alphar_1=(2/3)* (Is_A_1-(1/2)*Is_B_1-(1/2)*Is_C_1);      Is_beta_1=(2/3)*((sqrt(3)/2)*Is_B_1-(sqrt(3)/2)*Is_C_1);
@@ -141,7 +141,7 @@ if (Uc_A_1>0&&Uc_B_1<0&&Uc_C_1<=0 )
     %整流端选择 S1 S5 以及 S1 S6
     Vdc_a=1*Uc_A_1+(-1)*Uc_B_1;%%S1 S5的状态下的Vdc
     Vdc_b=1*Uc_A_1+(-1)*Uc_C_1;%%S1 S6的状态下的Vdc
-    da=(sin(sita-(-pi/6)));db=(sin(pi/3-(sita-(-pi/6)))); dc=1-da-db;
+    da=(sin(sita-(-pi/6)));db=sin(pi/3-(sita-(-pi/6))); dc=1-da-db;
 %     da=(-1)*(Uc_B_1/Uc_A_1);db=(-1)*(Uc_C_1/Uc_A_1);
      Vdc=da*Vdc_a+db*Vdc_b;
     Va=[1 0 0 0 1 0];Vb=[1 0 0 0 0 1];
@@ -1038,6 +1038,101 @@ da=(sin(pi/2+(sita))); db=(sin(pi/3-(pi/2+(sita)))); dc=1-da-db;
 
 end
 
+
+
+
+%%整流级也运用mpc选择的思想，将输入电压的扇区变化为（0，3/Π）%%
+
+%judge sector%
+Us_alphar=(2/3)* (Us_A-(1/2)*Us_B-(1/2)*Us_C);      Us_beta=(2/3)*(sqrt(3)/2)*(Us_B-Us_C);
+    if  Us_beta>0     
+        A0=1;
+    else
+        A0=0;
+    end
+    if  0.866*Us_alphar-0.5*Us_beta>0    
+        A1=1;        % sin(sita+2*pi/3)
+    else
+        A1=0;
+    end    
+    if  -0.866*Us_alphar-0.5*Us_beta>0     
+        A2=1;       % sin(sita-2*pi/3)
+    else
+        A2=0;
+    end
+    P1=4*A2+2*A1+A0;
+
+    if  P1==1            
+        sector=2;
+    elseif  P1==2        
+        sector=6;
+    elseif  P1==3        
+        sector=1;
+    elseif  P1==4       
+        sector=4;
+    elseif  P1==5        
+        sector=3;
+    elseif  P1==6       
+        sector=5;
+    else    
+    end
+if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(S1,S6)以及(S1,S5),(S2,S6)
+    Va=[1 0 0 0 1 0];Vb=[1 0 0 0 0 1];%%整流级选择15 16
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_C_1;
+    da=sin(sita);db=sin(pi/3-sita);
+    Vdc1=da*Vdc_a+db*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1
+    Va=[1 0 0 0 1 0];Vb=[0 1 0 0 0 1];%%整流级选择15 26，为了将合成的电压矢量处于1扇区，此时的da必须大于等于db
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
+elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S1,S5)以及(S3,S5),(S1,S6)
+    Va=[0 0 1 0 1 0];Vb=[1 0 0 0 1 0];%%整流级选择35 15
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    Va=[0 0 2 0 1 0];Vb=[1 0 0 0 0 1];%%整流级选择35 16，为了将合成的电压矢量处于2扇区，此时的da必须大于等于db
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_C_1;
+elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(S3,S5)以及(S3,S4),(S1,S5)
+    Va=[0 0 1 1 0 0];Vb=[0 0 1 0 1 0];%%整流级选择34 35
+    Vdc_a=Uc_C_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+    Va=[0 0 1 1 0 0];Vb=[1 0 0 0 1 0];%%整流级选择34 15，为了将合成的电压矢量处于3扇区，此时的da必须大于等于db
+    Vdc_a=Uc_C_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(S3,S4)以及(S2,S4),(S3,S5)
+    Va=[0 1 0 1 0 0];Vb=[0 0 1 1 0 0];%%整流级选择24 34
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_A_1;
+    Va=[0 1 0 1 0 0];Vb=[0 0 1 0 1 0];%%整流级选择24 35，为了将合成的电压矢量处于4扇区，此时的da必须大于等于db
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S2,S4)以及(S2,S6),(S3,S4)
+    Va=[0 1 0 0 0 1];Vb=[0 1 0 1 0 0];%%整流级选择26 24
+    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+    Va=[0 1 0 0 0 1];Vb=[0 0 1 1 0 0];%%整流级选择26 34，为了将合成的电压矢量处于5扇区，此时的da必须大于等于db
+    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_A_1;
+elseif(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S2,S6)以及(S1,S6),(S2,S4)
+    Va=[1 0 0 0 0 1];Vb=[0 1 0 0 0 1];%%整流级选择16 26
+    Vdc_a=Uc_A_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
+    Va=[1 0 0 0 0 1];Vb=[0 1 0 1 0 0];%%整流级选择16 24，为了将合成的电压矢量处于6扇区，此时的da必须大于等于db 
+    Vdc_a=Uc_A_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+end
+
 % if(rem(t,Ts)>=0&&rem(t,Ts)<Ts/2*(Dc1/8))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%16steps
 %     h=[Va Ic1 1 Vdc k];
 % elseif(rem(t,Ts)>=Ts/2*(Dc1/8)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1))
@@ -1091,26 +1186,28 @@ end
 %     h=[Vb Ic1 da sita k]; 
 % end
 
+%Vd=[0 0 0 0 0 0];%%%%recliter turn off
+
 if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(da*Da1))
-    h=[Va Ia1 rem(t,2*Ts) 1 k];
+    h=[Va Ia1 da 1 k];
 elseif(rem(t,2*Ts)>=(Ts*(da*Da1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1))
-    h=[Va Ib1 rem(t,2*Ts) 2 k];
+    h=[Va Ib1 da 2 k];
 elseif(rem(t,2*Ts)>=(Ts*(da*Da1+da*Db1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1+db*Db1))
-    h=[Vb Ib1 rem(t,2*Ts) 3 k];
+    h=[Vb Ib1 da 3 k];
 elseif(rem(t,2*Ts)>=(Ts*(da*Da1+da*Db1+db*Db1))&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1+db*Db1+db*Da1))
-    h=[Vb Ia1 rem(t,2*Ts) 4 k];
-elseif(rem(t,2*Ts)>=Ts*(da*Da1+da*Db1+db*Db1+db*Da1)&&rem(t,2*Ts)<Ts*(da*Da1+da*Db1+db*Db1+db*Da1+dc))
-    h=[Vc Ic1 rem(t,2*Ts) 5 k];
+    h=[Vb Ia1 da 4 k];
+elseif(rem(t,2*Ts)>=Ts*(da*Da1+da*Db1+db*Db1+db*Da1)&&rem(t,2*Ts)<Ts)
+    h=[Vd Ic1 da 5 k];
 elseif(rem(t,2*Ts)>=Ts&&rem(t,2*Ts)<Ts+Ts*dc)
-    h=[Vc Id1 rem(t,2*Ts) 6 k];
+    h=[Vd Id1 da 6 k];
 elseif(rem(t,2*Ts)>=(Ts+Ts*dc)&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1)))
-    h=[Vb Ib1 rem(t,2*Ts) 7 k];
+    h=[Vb Ib1 da 7 k];
 elseif(rem(t,2*Ts)>=(Ts+Ts*(dc+db*Da1))&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1+db*Db1)))
-    h=[Vb Ia1 rem(t,2*Ts) 8 k];
+    h=[Vb Ia1 da 8 k];
 elseif(rem(t,2*Ts)>=(Ts+Ts*(dc+db*Da1+db*Db1))&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1+db*Db1+da*Db1)))
-    h=[Va Ia1 rem(t,2*Ts) 9 k];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(dc+db*Da1+db*Db1+da*Db1))&&rem(t,2*Ts)<(Ts+Ts*(dc+db*Da1+db*Db1+da*Db1+da*Da1)))
-    h=[Va Ib1 rem(t,2*Ts) 10 k];
+    h=[Va Ia1 da 9 k];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(dc+db*Da1+db*Db1+da*Db1))&&rem(t,2*Ts)<(Ts+Ts))
+    h=[Va Ib1 da 10 k];
 end
 sys=h;
 end
