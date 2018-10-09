@@ -136,619 +136,7 @@ sita=atan(Uc_beta_1/Uc_alphar_1);
 % %    Is_beta_2=-0.0248*Uc_beta_1+0.9817*Is_beta_1+0.0248*Us_beta+0.0059*Ic_beta_1;
 % %    Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1_c);%%%%使用k时刻的电流电压求取K+1时刻的电流
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if (Uc_A_1>0&&Uc_B_1<0&&Uc_C_1<=0 )
-
-    %整流端选择 S1 S5 以及 S1 S6
-    Vdc_a=1*Uc_A_1+(-1)*Uc_B_1;%%S1 S5的状态下的Vdc
-    Vdc_b=1*Uc_A_1+(-1)*Uc_C_1;%%S1 S6的状态下的Vdc
-    da=(sin(sita-(-pi/6)));db=sin(pi/3-(sita-(-pi/6))); dc=1-da-db;
-%     da=(-1)*(Uc_B_1/Uc_A_1);db=(-1)*(Uc_C_1/Uc_A_1);
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[1 0 0 0 1 0];Vb=[1 0 0 0 0 1];
-    if(abs(Uc_B_1)<=abs(Uc_C_1)) Vc=[0 1 0 0 1 0];
-    else 
-        Vc=[0 0 1 0 0 1];
-    end
-        k=1;
-     %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
-    Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);
-    
-         %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-   
-         %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end    
- 
-          
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-    
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end 
-    
-         %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-elseif Uc_A_1>0&&Uc_B_1>=0&&Uc_C_1<0
-
-    %整流端选择 S2 S6 以及 S1 S6
-    Vdc_a=1*Uc_A_1+(-1)*Uc_C_1;%%S1 S6的状态下的Vdc
-    Vdc_b=1*Uc_B_1+(-1)*Uc_C_1;%%S2 S6的状态下的Vdc
-    da=(sin(sita-pi/6));db=(sin(pi/2-(sita)));dc=1-da-db;
-%     da=(-1)*(Uc_A_1/Uc_C_1);db=(-1)*(Uc_B_1/Uc_C_1);
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[1 0 0 0 0 1];Vb=[0 1 0 0 0 1];
-    if(abs(Uc_A_1)<=abs(Uc_B_1))
-        Vc=[1 0 0 1 0 0];
-    else Vc=[0 1 0 0 1 0];
-    end
-    k=2;
-     %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
-    Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);
-    
-         %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-   
-         %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end    
- 
-          
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-    
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end 
-    
-         %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-           
-elseif Uc_B_1>0&&Uc_A_1<=0&&Uc_C_1<0  
-  
-    %整流端选择 S2 S6 以及 S2 S4
-    Vdc_a=1*Uc_B_1+(-1)*Uc_C_1;%%S2 S6的状态下的Vdc
-    Vdc_b=1*Uc_B_1+(-1)*Uc_A_1;%%S2 S4的状态下的Vdc
-%     da=(-1)*(Uc_C_1/Uc_B_1);db=(-1)*(Uc_A_1/Uc_B_1); 
-    sita=pi+sita;
-    da=(sin(sita-pi/2));db=(sin(5*pi/6-(sita)));dc=1-da-db;
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[0 1 0 0 0 1];Vb=[0 1 0 1 0 0];
-    if(abs(Uc_C_1)<=abs(Uc_A_1))
-        Vc=[0 0 1 0 0 1];
-    else
-        Vc=[1 0 0 1 0 0];
-    end
-    k=3;
-     %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
-    Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);
-    
-         %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-   
-         %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end    
- 
-          
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-    
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end 
-    
-         %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-
-elseif Uc_A_1<0&&Uc_B_1>0&&Uc_C_1>=0
-    sita=pi+sita;
-    %整流端选择 S2 S4 以及 S3 S4
-    Vdc_a=1*Uc_B_1+(-1)*Uc_A_1;%%S2 S4的状态下的Vdc
-    Vdc_b=1*Uc_C_1+(-1)*Uc_A_1;%%S3 S4的状态下的Vdc
-%     da=(-1)*(Uc_B_1/Uc_A_1);db=(-1)*(Uc_C_1/Uc_A_1);
-da=(sin(sita-(5*pi/6)));db=(sin(7*pi/6-(sita))); dc=1-da-db;
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[0 1 0 1 0 0];Vb=[0 0 1 1 0 0];
-    if(abs(Uc_B_1)<=abs(Uc_C_1))
-        Vc=[0 1 0 0 1 0 ];
-    else
-        Vc=[0 0 1 0 0 1];
-    end
-        k=4;
-     %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
-    Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);
-    
-         %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-   
-         %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end    
- 
-          
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-    
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end 
-    
-         %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-
-elseif Uc_C_1>0&&Uc_B_1<=0&&Uc_A_1<0
-    sita=pi+sita;
-    %整流端选择 S3 S4 以及 S3 S5
-    Vdc_a=1*Uc_C_1+(-1)*Uc_A_1;%%S3 S4的状态下的Vdc
-    Vdc_b=1*Uc_C_1+(-1)*Uc_B_1;%%S3 S5的状态下的Vdc
-%     da=(-1)*(Uc_A_1/Uc_C_1);db=(-1)*(Uc_B_1/Uc_C_1);
-   da=(sin(sita-7*pi/6)); db=sin(3*pi/2-(sita)); dc=1-da-db;
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[0 0 1 1 0 0];Vb=[0 0 1 0 1 0];
-    if(abs(Uc_A_1)<=abs(Uc_B_1))
-        Vc=[1 0 0 1 0 0];
-    else
-        Vc=[0 1 0 0 1 0];
-    end
-    k=5;
+%%%%%%逆变级的遍历
      %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
@@ -884,161 +272,7 @@ elseif Uc_C_1>0&&Uc_B_1<=0&&Uc_A_1<0
         Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
     end  
 
-  
-else
-
-    %整流端选择 S3 S5 以及 S1 S5
-    Vdc_a=1*Uc_C_1+(-1)*Uc_B_1;%%S3 S5的状态下的Vdc
-    Vdc_b=1*Uc_A_1+(-1)*Uc_B_1;%%S1 S5的状态下的Vdc
-%     da=(-1)*(Uc_C_1/Uc_B_1);db=(-1)*(Uc_A_1/Uc_B_1);
-da=(sin(pi/2+(sita))); db=(sin(pi/3-(pi/2+(sita)))); dc=1-da-db;
-     Vdc=da*Vdc_a+db*Vdc_b;
-    Va=[0 0 1 0 1 0];Vb=[1 0 0 0 1 0];
-    if(abs(Uc_C_1)<=abs(Uc_A_1))
-        Vc=[0 0 1 0 0 1];
-    else
-        Vc=[1 0 0 1 0 0];
-    end
-    k=6;
-     %%%%%%%S1 S5 S6 以及S1 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
-    Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);
-    
-         %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end
-   
-         %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end    
- 
-          
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end  
-    
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end 
-    
-         %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
-    Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;Dc1=Dc2;
-    end     
-   
-
-end
-
-
+Idc=Da1*(Ia1(1)*Io_A_1+Ia1(2)*Io_B_1+Ia1(3)*Io_C_1)+Db1*(Ib1(1)*Io_A_1+Ib1(2)*Io_B_1+Ia1(3)*Io_C_1)
 
 
 %%整流级也运用mpc选择的思想，将输入电压的扇区变化为（0，3/Π）%%
@@ -1077,11 +311,11 @@ Us_alphar=(2/3)* (Us_A-(1/2)*Us_B-(1/2)*Us_C);      Us_beta=(2/3)*(sqrt(3)/2)*(U
     else    
     end
 if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(S1,S6)以及(S1,S5),(S2,S6)
-    Va=[1 0 0 0 1 0];Vb=[1 0 0 0 0 1];%%整流级选择15 16
+    Va1=[1 0 0 0 1 0];Vb1=[1 0 0 0 0 1];%%整流级选择15 16
     Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
-    da=sin(sita);db=sin(pi/3-sita);
-    Vdc1=da*Vdc_a+db*Vdc_b;
+    da1=sin(pi/3-sita);db1=sin(sita);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
     Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
     Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
@@ -1092,45 +326,332 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(S1,S
     Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
     Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1
-    Va=[1 0 0 0 1 0];Vb=[0 1 0 0 0 1];%%整流级选择15 26，为了将合成的电压矢量处于1扇区，此时的da必须大于等于db
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    Va2=[1 0 0 0 1 0];Vb2=[0 1 0 0 0 1];%%整流级选择15 26，为了将合成的电压矢量处于1扇区，此时的da必须大于等于db
     Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_B_1+(-1)*Uc_C_1;
-elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S1,S5)以及(S3,S5),(S1,S6)
-    Va=[0 0 1 0 1 0];Vb=[1 0 0 0 1 0];%%整流级选择35 15
+    da2=sin(pi/3-sita);db2=sita(2*pi/3-(pi/3-sita));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
+    
+elseif(sector==2&&Us_alphar>=0)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S1,S5)以及(S3,S5),(S1,S6)
+    Va1=[0 0 1 0 1 0];Vb1=[1 0 0 0 1 0];%%整流级选择35 15
     Vdc_a=Uc_C_1+(-1)*Uc_B_1;
     Vdc_b=Uc_A_1+(-1)*Uc_B_1;
-    Va=[0 0 2 0 1 0];Vb=[1 0 0 0 0 1];%%整流级选择35 16，为了将合成的电压矢量处于2扇区，此时的da必须大于等于db
+    da1=sin(2*pi/3-(sita));db1=sin(sita-pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    Va2=[0 0 1 0 1 0];Vb2=[1 0 0 0 0 1];%%整流级选择35 16，为了将合成的电压矢量处于2扇区，此时的da必须大于等于db
     Vdc_a=Uc_C_1+(-1)*Uc_B_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
+    da2=sin(2*pi/3-(sita));db2=sin(2*pi/3-(2*pi/3-(sita)));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+        
+    
+    
+elseif(sector==2&&Us_alphar<0)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S1,S5)以及(S3,S5),(S1,S6)
+    sita=pi+sita;
+    Va1=[0 0 1 0 1 0];Vb1=[1 0 0 0 1 0];%%整流级选择35 15
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    da1=sin(2*pi/3-(sita));db1=sin(sita-pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    
+    
+    Va2=[0 0 2 0 1 0];Vb2=[1 0 0 0 0 1];%%整流级选择35 16，为了将合成的电压矢量处于2扇区，此时的da必须大于等于db
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_C_1;
+    da2=sin(2*pi/3-(sita));db2=sin(2*pi/3-(2*pi/3-(sita)));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
+    
 elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(S3,S5)以及(S3,S4),(S1,S5)
-    Va=[0 0 1 1 0 0];Vb=[0 0 1 0 1 0];%%整流级选择34 35
+    sita=pi+sita;
+    Va1=[0 0 1 1 0 0];Vb1=[0 0 1 0 1 0];%%整流级选择34 35
     Vdc_a=Uc_C_1+(-1)*Uc_A_1;
     Vdc_b=Uc_C_1+(-1)*Uc_B_1;
-    Va=[0 0 1 1 0 0];Vb=[1 0 0 0 1 0];%%整流级选择34 15，为了将合成的电压矢量处于3扇区，此时的da必须大于等于db
+    da1=sin(pi-(sita));db1=sin(sita-2*pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    
+    Va2=[0 0 1 1 0 0];Vb2=[1 0 0 0 1 0];%%整流级选择34 15，为了将合成的电压矢量处于3扇区，此时的da必须大于等于db
     Vdc_a=Uc_C_1+(-1)*Uc_A_1;
     Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    da2=sin(pi-(sita));db2=sin(2*pi/3-(pi-(sita)));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
 elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(S3,S4)以及(S2,S4),(S3,S5)
-    Va=[0 1 0 1 0 0];Vb=[0 0 1 1 0 0];%%整流级选择24 34
+    sita=pi+sita;
+    Va1=[0 1 0 1 0 0];Vb1=[0 0 1 1 0 0];%%整流级选择24 34
     Vdc_a=Uc_B_1+(-1)*Uc_A_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
-    Va=[0 1 0 1 0 0];Vb=[0 0 1 0 1 0];%%整流级选择24 35，为了将合成的电压矢量处于4扇区，此时的da必须大于等于db
+    da1=sin(4*pi/3-sita);db1=sin(sita-pi);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    
+    Va2=[0 1 0 1 0 0];Vb2=[0 0 1 0 1 0];%%整流级选择24 35，为了将合成的电压矢量处于4扇区，此时的da必须大于等于db
     Vdc_a=Uc_B_1+(-1)*Uc_A_1;
     Vdc_b=Uc_C_1+(-1)*Uc_B_1;
-elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S2,S4)以及(S2,S6),(S3,S4)
-    Va=[0 1 0 0 0 1];Vb=[0 1 0 1 0 0];%%整流级选择26 24
+    da2=sin(4*pi/3-sita);db2=sin(2*pi/3-(4*pi/3-sita));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
+elseif(sector==5&&Us_alphar<=0)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S2,S4)以及(S2,S6),(S3,S4)
+    sita=pi+sita;
+    Va1=[0 1 0 0 0 1];Vb1=[0 1 0 1 0 0];%%整流级选择26 24
     Vdc_a=Uc_B_1+(-1)*Uc_C_1;
     Vdc_b=Uc_B_1+(-1)*Uc_A_1;
-    Va=[0 1 0 0 0 1];Vb=[0 0 1 1 0 0];%%整流级选择26 34，为了将合成的电压矢量处于5扇区，此时的da必须大于等于db
+    da1=sin(5*pi/3-sita);db1=sin(sita-4*pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    
+    
+    Va2=[0 1 0 0 0 1];Vb2=[0 0 1 1 0 0];%%整流级选择26 34，为了将合成的电压矢量处于5扇区，此时的da必须大于等于db
     Vdc_a=Uc_B_1+(-1)*Uc_C_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
-elseif(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S2,S6)以及(S1,S6),(S2,S4)
-    Va=[1 0 0 0 0 1];Vb=[0 1 0 0 0 1];%%整流级选择16 26
+    da2=sin(5*pi/3-sita);db2=sin(2*pi/3-(5*pi/3-sita));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+        if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+        end
+    
+elseif(sector==5&&Us_alphar>0)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S2,S4)以及(S2,S6),(S3,S4)
+    Va1=[0 1 0 0 0 1];Vb1=[0 1 0 1 0 0];%%整流级选择26 24
+    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+    da1=sin(5*pi/3-sita);db1=sin(sita-4*pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    Va2=[0 1 0 0 0 1];Vb2=[0 0 1 1 0 0];%%整流级选择26 34，为了将合成的电压矢量处于5扇区，此时的da必须大于等于db
+    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_A_1;
+    da2=sin(5*pi/3-sita);db2=sin(2*pi/3-(5*pi/3-sita));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
+elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S2,S6)以及(S1,S6),(S2,S4)
+    Va1=[1 0 0 0 0 1];Vb1=[0 1 0 0 0 1];%%整流级选择16 26
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
     Vdc_b=Uc_B_1+(-1)*Uc_C_1;
-    Va=[1 0 0 0 0 1];Vb=[0 1 0 1 0 0];%%整流级选择16 24，为了将合成的电压矢量处于6扇区，此时的da必须大于等于db 
+    da1=sin(2*pi-sita);db1=sin(sita-5*pi/3);
+    Vdc1=da1*Vdc_a+db1*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g1=(ga*gb)/(ga+gb);
+    
+    
+    Va2=[1 0 0 0 0 1];Vb2=[0 1 0 1 0 0];%%整流级选择16 24，为了将合成的电压矢量处于6扇区，此时的da必须大于等于db 
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
     Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+    da2=sin(2*pi-sita);db2=sin(2*pi-(sita-5*pi/3));
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%在整流级为100010时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc1=Vdc2;
+    end
+    
 end
 
 % if(rem(t,Ts)>=0&&rem(t,Ts)<Ts/2*(Dc1/8))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%16steps
