@@ -45,7 +45,7 @@ Io_A_1=u(10); Io_B_1=u(11); Io_C_1=u(12);
 Io_A_g=u(13); Io_B_g=u(14); Io_C_g=u(15);
 h=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ];
 persistent Vdc;
-Vdc=140;
+
 Ts=0.00005;Rf=0.5; Lf=0.0004; Cf=21e-6; Rs=2; Ls=0.02;%%ÈôÐÞ¸ÄÖÜÆÚÇóÈ¡Is£¨K+1)µÄ×´Ì¬·½³ÌÏµÊýÒ²ÐèÏàÓ¦µÄÐÞ¸Ä
 % % K1=0;K2=0; %%%%%K1 reactive power K2 source current
 % 
@@ -279,12 +279,12 @@ Us_alphar=(2/3)* (Us_A-(1/2)*Us_B-(1/2)*Us_C);      Us_beta=(2/3)*(sqrt(3)/2)*(U
     else    
     end
 if(sector==1)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S6),(S1,S6)ÒÔ¼°(S1,S5),(S2,S6)
-    Va1=[1 0 0 0 1 0];Vb1=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ26 16
+    Va1=[0 1 0 0 0 1];Vb1=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ26 16
     Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
     da=sin(pi/3-sita);db=sin(sita);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_a=0*Idc;Ic_B_a=(1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
     Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -297,13 +297,13 @@ if(sector==1)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S6),(S1,S
     g1=(ga*gb)/(ga+gb);
     
     
-    Va2=[1 0 0 0 1 0];Vb2=[0 1 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ15 26£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ1ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
-    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
+    Va2=[0 1 0 0 0 1];Vb2=[1 0 0 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ 26 15£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ1ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
     da2=sin(pi/3-sita);db2=sita(2*pi/3-(pi/3-sita));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
-    Ic_A_b=0;Ic_B_b=1*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
+    Ic_A_a=0*Idc;Ic_B_a=(1)*Idc;Ic_C_a=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
+    Ic_A_b=1*Idc;Ic_B_b=0*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -320,14 +320,14 @@ if(sector==1)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S6),(S1,S
     end
     
     
-elseif(sector==2&Uc_alphar_1>=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S5),(S1,S5)ÒÔ¼°(S3,S5),(S1,S6)
-    Va1=[0 0 1 0 1 0];Vb1=[1 0 0 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ35 15
-    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
-    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+elseif(sector==2&Uc_alphar_1>=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S4),(S2,S6)ÒÔ¼°(S2,S4),(S1,S6)
+    Va1=[0 1 0 1 0 0];Vb1=[0 1 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ24 26
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
     da=sin(2*pi/3-(sita));db=sin(sita-pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=0*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
-    Ic_A_b=1*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_a=1*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_b=0*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -339,12 +339,12 @@ elseif(sector==2&Uc_alphar_1>=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×
     g1=(ga*gb)/(ga+gb);
     
     
-    Va2=[0 0 1 0 1 0];Vb2=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ35 16£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ2ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Va2=[0 1 0 1 0 0];Vb2=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ24 16£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ2ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
     da2=sin(2*pi/3-(sita));db2=sin(2*pi/3-(2*pi/3-(sita)));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=0*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_a=-1*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
     Ic_A_b=1*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -363,15 +363,15 @@ elseif(sector==2&Uc_alphar_1>=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×
         
     
     
-elseif(sector==2&Uc_alphar_1<0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S5),(S1,S5)ÒÔ¼°(S3,S5),(S1,S6)
+elseif(sector==2&Uc_alphar_1<0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S4),(S2,S6)ÒÔ¼°(S2,S4),(S1,S6)
     sita=pi+sita;
-    Va1=[0 0 1 0 1 0];Vb1=[1 0 0 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ35 15
-    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
-    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    Va1=[0 1 0 1 0 0];Vb1=[0 1 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ24 26
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
     da=sin(2*pi/3-(sita));db=sin(sita-pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=0*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
-    Ic_A_b=1*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_a=1*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_b=0*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -383,14 +383,12 @@ elseif(sector==2&Uc_alphar_1<0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´
     g1=(ga*gb)/(ga+gb);
     
     
-    
-    
-    Va2=[0 0 2 0 1 0];Vb2=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ35 16£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ2ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Va2=[0 1 0 1 0 0];Vb2=[1 0 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ24 16£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ2ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
     da2=sin(2*pi/3-(sita));db2=sin(2*pi/3-(2*pi/3-(sita)));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=0*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_a=-1*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
     Ic_A_b=1*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -404,19 +402,19 @@ elseif(sector==2&Uc_alphar_1<0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da1=da2;db1=db2;Vdc=Vdc2;
     end
     
     
-elseif(sector==3)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S4),(S3,S5)ÒÔ¼°(S3,S4),(S1,S5)
+elseif(sector==3)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S4),(S2,S4)ÒÔ¼°(S3,S4),(S2,S6)
     sita=pi+sita;
-    Va1=[0 0 1 1 0 0];Vb1=[0 0 1 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ34 35
+    Va1=[0 0 1 1 0 0];Vb1=[0 1 0 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ34 24
     Vdc_a=Uc_C_1+(-1)*Uc_A_1;
-    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
     da=sin(pi-(sita));db=sin(sita-2*pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
     Ic_A_a=(-1)*Idc;Ic_B_a=(0)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001100Ê±µÄIc
-    Ic_A_b=0*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_b=(-1)*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -429,13 +427,13 @@ elseif(sector==3)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S4),(
     
     
     
-    Va2=[0 0 1 1 0 0];Vb2=[1 0 0 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ34 15£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ3ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Va2=[0 0 1 1 0 0];Vb2=[0 1 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ34 26£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ3ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
     Vdc_a=Uc_C_1+(-1)*Uc_A_1;
-    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
     da2=sin(pi-(sita));db2=sin(2*pi/3-(pi-(sita)));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     Ic_A_a=(-1)*Idc;Ic_B_a=(0)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001100Ê±µÄIc
-    Ic_A_b=1*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_b=0*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -451,14 +449,14 @@ elseif(sector==3)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S4),(
         Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
     end
     
-elseif(sector==4)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S4),(S3,S4)ÒÔ¼°(S2,S4),(S3,S5)
+elseif(sector==4)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S3,S5),(S3,S4)ÒÔ¼°(S3,S5),(S2,S4)
     sita=pi+sita;
-    Va1=[0 1 0 1 0 0];Vb1=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ24 34
-    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
+    Va1=[0 0 1 0 1 0];Vb1=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ35 34
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
     da=sin(4*pi/3-sita);db=sin(sita-pi);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_a=(0)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_A_b=(-1)*Idc;Ic_B_b=0;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001100Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -472,13 +470,13 @@ elseif(sector==4)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S4),(
     
     
     
-    Va2=[0 1 0 1 0 0];Vb2=[0 0 1 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ24 35£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ4ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_B_1+(-1)*Uc_A_1;
-    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+    Va2=[0 0 1 0 1 0];Vb2=[0 1 0 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ35 24£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ4ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_a=Uc_C_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
     da2=sin(4*pi/3-sita);db2=sin(2*pi/3-(4*pi/3-sita));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
-    Ic_A_b=0*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_a=(0)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª0010100Ê±µÄIc
+    Ic_A_b=(-1)*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª01010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -494,15 +492,15 @@ elseif(sector==4)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S4),(
         Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
     end
     
-elseif(sector==5&Uc_alphar_1<=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S6),(S2,S4)ÒÔ¼°(S2,S6),(S3,S4)
+elseif(sector==5&Uc_alphar_1<=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S1,S5),(S3,S5)ÒÔ¼°(S1,S5),(S3,S4)
     sita=pi+sita;
-    Va1=[0 1 0 0 0 1];Vb1=[0 1 0 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ26 24
-    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
-    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+    Va1=[1 0 0 0 1 0];Vb1=[0 0 1 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ15 35
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
     da=sin(5*pi/3-sita);db=sin(sita-4*pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
-    Ic_A_b=(-1)*Idc;Ic_B_b=0;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001100Ê±µÄIc
+    Ic_A_a=(1)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_b=(0)*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -516,13 +514,13 @@ elseif(sector==5&Uc_alphar_1<=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×
     
     
     
-    Va2=[0 1 0 0 0 1];Vb2=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ26 34£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ5ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Va2=[1 0 0 0 1 0];Vb2=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ15 34£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ5ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
     da2=sin(5*pi/3-sita);db2=sin(2*pi/3-(5*pi/3-sita));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
-    Ic_A_b=0*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_a=(1)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_b=(-1)*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -539,13 +537,13 @@ elseif(sector==5&Uc_alphar_1<=0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×
         end
     
 elseif(sector==5&Uc_alphar_1>0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S2,S6),(S2,S4)ÒÔ¼°(S2,S6),(S3,S4)
-    Va1=[0 1 0 0 0 1];Vb1=[0 1 0 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ26 24
-    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
-    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
+    Va1=[1 0 0 0 1 0];Vb1=[0 0 1 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ15 35
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
     da=sin(5*pi/3-sita);db=sin(sita-4*pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
-    Ic_A_b=(-1)*Idc;Ic_B_b=0;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001100Ê±µÄIc
+    Ic_A_a=(1)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
+    Ic_A_b=(0)*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -557,13 +555,15 @@ elseif(sector==5&Uc_alphar_1>0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´
     g1=(ga*gb)/(ga+gb);
     
     
-    Va2=[0 1 0 0 0 1];Vb2=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ26 34£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ5ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
-    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    
+    
+    Va2=[1 0 0 0 1 0];Vb2=[0 0 1 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ15 34£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ5ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
     da2=sin(5*pi/3-sita);db2=sin(2*pi/3-(5*pi/3-sita));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
-    Ic_A_b=0*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
+    Ic_A_a=(1)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_b=(-1)*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -574,19 +574,19 @@ elseif(sector==5&Uc_alphar_1>0)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb)/(ga+gb);
     
-    if(g1>=g2)
+        if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc1=Vdc2;
-    end
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        end
     
-elseif(sector==6)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S1,S6),(S2,S6)ÒÔ¼°(S1,S6),(S2,S4)
-    Va1=[1 0 0 0 0 1];Vb1=[0 1 0 0 0 1];%%ÕûÁ÷¼¶Ñ¡Ôñ16 26
+elseif(sector==6)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S1,S6),(S1,S5)ÒÔ¼°(S1,S6),(S3,S5)
+    Va1=[1 0 0 0 0 1];Vb1=[1 0 0 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ16 15
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
-    Vdc_b=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
     da=sin(2*pi-sita);db=sin(sita-5*pi/3);
     Vdc=da*Vdc_a+db*Vdc_b;
     Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
-    Ic_A_b=0*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(-1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010001Ê±µÄIc
+    Ic_A_b=1*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª100010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
@@ -598,13 +598,13 @@ elseif(sector==6)%%ÎªÁË±£Ö¤Ö±Á÷»·½ÚÎªpostive£¬¿ÉÑ¡ÔñµÄÕûÁ÷¼¶¿ª¹Ø×´Ì¬Îª£¨S1,S6),(
     g1=(ga*gb)/(ga+gb);
     
     
-    Va2=[1 0 0 0 0 1];Vb2=[0 1 0 1 0 0];%%ÕûÁ÷¼¶Ñ¡Ôñ16 24£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ6ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb 
+    Va2=[1 0 0 0 0 1];Vb2=[0 0 1 0 1 0];%%ÕûÁ÷¼¶Ñ¡Ôñ16 35£¬ÎªÁË½«ºÏ³ÉµÄµçÑ¹Ê¸Á¿´¦ÓÚ6ÉÈÇø£¬´ËÊ±µÄda±ØÐë´óÓÚµÈÓÚdb 
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
-    Vdc_b=Uc_B_1+(-1)*Uc_A_1;
-    da2=sin(2*pi-sita);db2=sin(2*pi-(sita-5*pi/3));
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+    da2=sin(2*pi-sita);db2=sin(2*pi/3-(-sita));
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=1*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
-    Ic_A_b=(-1)*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(0)*Idc;%%%ÔÚÕûÁ÷¼¶Îª010100Ê±µÄIc
+    Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=-1*Idc;%%%ÔÚÕûÁ÷¼¶Îª100001Ê±µÄIc
+    Ic_A_b=(0)*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%ÔÚÕûÁ÷¼¶Îª001010Ê±µÄIc
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
