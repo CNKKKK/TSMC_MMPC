@@ -319,13 +319,13 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
     
         Va2=[1 0 0 0 0 1];Vb2=[1 0 0 0 1 0];%%整流级选择 16 15
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
     Vdc_a=Uc_B_1+(-1)*Uc_C_1;
-    Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=(-1)*Idc;%%%在整流级为010001时的Ic
+    Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=(-1)*Idc;%%%在整流级为100001时的Ic
     Ic_A_b=1*Idc;Ic_B_b=0*Idc;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -388,14 +388,14 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
         
     
         Va2=[0 1 0 0 0 1];Vb2=[1 0 0 0 0 1];%%整流级选择26 16
     Vdc_a=Uc_B_1+(-1)*Uc_C_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
-    Ic_A_a=0*Idc;Ic_B_a=(1)*Idc;Ic_C_a=-1*Idc;%%%在整流级为010100时的Ic
+    Ic_A_a=0*Idc;Ic_B_a=(1)*Idc;Ic_C_a=-1*Idc;%%%在整流级为010001时的Ic
     Ic_A_b=1*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -461,7 +461,7 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
         Va2=[0 1 0 1 0 0];Vb2=[0 1 0 0 0 1];%%整流级选择24 26
     Vdc_a=Uc_B_1+(-1)*Uc_A_1;
     Vdc_b=Uc_B_1+(-1)*Uc_C_1;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%在整流级为001100时的Ic
+    Ic_A_a=(-1)*Idc;Ic_B_a=(1)*Idc;Ic_C_a=0*Idc;%%%在整流级为010100时的Ic
     Ic_A_b=0*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(-1)*Idc;%%%在整流级为010001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -524,7 +524,7 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Va2=[0 0 1 1 0 0];Vb2=[0 1 0 1 0 0];%%整流级选择34 24
     Vdc_a=Uc_C_1+(-1)*Uc_A_1;
     Vdc_b=Uc_B_1+(-1)*Uc_A_1;
-    Ic_A_a=(-1)*Idc;Ic_B_a=(0)*Idc;Ic_C_a=1*Idc;%%%在整流级为0010100时的Ic
+    Ic_A_a=(-1)*Idc;Ic_B_a=(0)*Idc;Ic_C_a=1*Idc;%%%在整流级为001100时的Ic
     Ic_A_b=(-1)*Idc;Ic_B_b=(1)*Idc;Ic_C_b=(0)*Idc;%%%在整流级为01010时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -592,7 +592,7 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
 Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
     Vdc_a=Uc_C_1+(-1)*Uc_B_1;
     Vdc_b=Uc_C_1+(-1)*Uc_A_1;
-    Ic_A_a=(0)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%在整流级为010100时的Ic
+    Ic_A_a=(0)*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=1*Idc;%%%在整流级为001010时的Ic
     Ic_A_b=(-1)*Idc;Ic_B_b=(0)*Idc;Ic_C_b=(1)*Idc;%%%在整流级为001010时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -611,7 +611,7 @@ Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
         Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
         end
         
-elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S1,S5)以及(S1,S6),(S3,S5)
+elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S1,S5)以及(S1,S6),(S3,S5)and(s1s5)(s3s5)
     Va1=[1 0 0 0 0 1];Vb1=[1 0 0 0 1 0];%%整流级选择16 15
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
     Vdc_b=Uc_A_1+(-1)*Uc_B_1;
@@ -630,10 +630,32 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
-    Va2=[1 0 0 0 0 1];Vb2=[0 0 1 0 1 0];%%整流级选择16 35，为了将合成的电压矢量处于6扇区，此时的da必须大于等于db 
+    Va2=[1 0 0 0 0 1];Vb2=[0 0 1 0 1 0];%%整流级选择16 35
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
     Vdc_b=Uc_C_1+(-1)*Uc_B_1;
     Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=-1*Idc;%%%在整流级为100001时的Ic
+    Ic_A_b=(0)*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%在整流级为001010时的Ic
+    Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
+    Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
+     Is_alphar_a_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_a;
+     Is_beta_a_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_a;
+     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+    Is_alphar_b_1=-0.0248*Uc_alphar_1+0.9817*Is_alphar+0.0248*Us_alphar+0.0059*Ic_alphar_b;
+    Is_beta_b_1=-0.0248*Uc_beta_1+0.9817*Is_beta+0.0248*Us_beta+0.0059*Ic_beta_b;
+    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
+    g2=(ga*gb)/(ga+gb);
+    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    
+    if(g1>=g2)
+    else
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+    end
+    
+        Va2=[1 0 0 0 1 0];Vb2=[0 0 1 0 1 0];%%整流级选择15 35
+    Vdc_a=Uc_A_1+(-1)*Uc_B_1;
+    Vdc_b=Uc_C_1+(-1)*Uc_B_1;
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0*Idc;%%%在整流级为100010时的Ic
     Ic_A_b=(0)*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(1)*Idc;%%%在整流级为001010时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);

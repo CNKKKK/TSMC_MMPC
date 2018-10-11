@@ -45,7 +45,7 @@ Io_A_1=u(10); Io_B_1=u(11); Io_C_1=u(12);
 Io_A_g=u(13); Io_B_g=u(14); Io_C_g=u(15);
 h=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ];
 persistent Vdc;
-
+Vdc=180;
 Ts=0.00005;Rf=0.5; Lf=0.0004; Cf=21e-6; Rs=2; Ls=0.02;%%若修改周期求取Is（K+1)的状态方程系数也需相应的修改
 % % K1=0;K2=0; %%%%%K1 reactive power K2 source current
 % 
@@ -319,7 +319,7 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
     
         Va2=[1 0 0 0 0 1];Vb2=[1 0 0 0 1 0];%%整流级选择 16 15
@@ -388,7 +388,7 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
         
     
@@ -455,7 +455,7 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
     
         Va2=[0 1 0 1 0 0];Vb2=[0 1 0 0 0 1];%%整流级选择24 26
@@ -518,7 +518,7 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
     
     Va2=[0 0 1 1 0 0];Vb2=[0 1 0 1 0 0];%%整流级选择34 24
@@ -586,7 +586,7 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     
         if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
         end
     
 Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
@@ -649,7 +649,7 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     
     if(g1>=g2)
     else
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
     end
     
         Va2=[1 0 0 0 1 0];Vb2=[0 0 1 0 1 0];%%整流级选择15 35
