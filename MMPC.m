@@ -285,11 +285,15 @@ Us_alphar=(2/3)* (Us_A-(1/2)*Us_B-(1/2)*Us_C);      Us_beta=(2/3)*(sqrt(3)/2)*(U
     
     
     %%Ic=[整流]*Idc;Is(k+1)=A*Is(测量）+B*Us(测量）+C*Uc(测量）+D*Ic(计算）;g=abs(Qs*-Qs)^2;da=ga/(ga+gb);！！！！！
+   
+    Is_alphar_c_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar;%%整流端寻找绝对值最小的零矢量，把此零矢量的gc也投入到调至过程中
+    Is_beta_c_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta;%%无论零矢量选择Uaa，Ubb，Ucc，Ic=0*Idc;
+    gc=(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1)^2;
 if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S6)以及(S1,S5),(S2,S6)；（S1S5) (S1S6)
     Va1=[0 1 0 0 0 1];Vb1=[1 0 0 0 0 1];%%整流级选择26 16
     Vdc_a=Uc_A_1+(-1)*Uc_B_1;
     Vdc_b=Uc_A_1+(-1)*Uc_C_1;
-    Ic_A_a=0*Idc;Ic_B_a=(1)*Idc;Ic_C_a=1*Idc;%%%在整流级为010001时的Ic
+    Ic_A_a=1*Idc;Ic_B_a=(-1)*Idc;Ic_C_a=0*Idc;%%%在整流级为010001时的Ic
     Ic_A_b=1*Idc;Ic_B_b=0;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
@@ -299,8 +303,16 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
      Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
      Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);    
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);    
+    
+    if(abs(Uc_A_1)<=abs(Uc_B_1))
+        Vc=[1 0 0 1 0 0];%%零矢量选择14，这样开关顺序应该为26 16 14 16 26
+        da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
+    elseif(abs(Uc_A_1)>abs(Uc_B_1))
+        Vc=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为16 26 25 26 16
+    Va1=[1 0 0 0 0 1];Vb1=[0 1 0 0 0 1];
+    db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    end
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
@@ -317,8 +329,8 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -338,8 +350,8 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -366,8 +378,8 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
     
     Va2=[0 1 0 1 0 0];Vb2=[1 0 0 0 0 1];%%整流级选择24 16
@@ -384,8 +396,8 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -406,8 +418,8 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -430,8 +442,8 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
@@ -449,8 +461,8 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -470,8 +482,8 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -492,8 +504,8 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
@@ -510,8 +522,8 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -531,8 +543,8 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -556,8 +568,8 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
@@ -576,8 +588,8 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
         if(g1>=g2)
@@ -597,8 +609,8 @@ Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
         if(g1>=g2)
@@ -619,8 +631,8 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);
-    da=gb/(gb+ga);db=ga/(gb+ga);
+    g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
     
     
@@ -637,8 +649,8 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
@@ -658,8 +670,8 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_alphar_b_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_b;
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb);
-    da2=gb/(gb+ga);db2=ga/(gb+ga);
+    g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
     
     if(g1>=g2)
