@@ -306,14 +306,16 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);    
     
     if(abs(Uc_A_1)<=abs(Uc_B_1))
-        Vc=[1 0 0 1 0 0];%%零矢量选择14，这样开关顺序应该为26 16 14 16 26
+        Vc1=[1 0 0 1 0 0];%%零矢量选择14，这样开关顺序应该为26 16 14 16 26
         da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc=da*Vdc_a+db*Vdc_b;
     elseif(abs(Uc_A_1)>abs(Uc_B_1))
-        Vc=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为16 26 25 26 16
+        Vc1=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为16 26 25 26 16
     Va1=[1 0 0 0 0 1];Vb1=[0 1 0 0 0 1];
     db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc=db*Vdc_a+da*Vdc_b;
     end
-    Vdc=da*Vdc_a+db*Vdc_b;
+    
     
     
     Va2=[0 1 0 0 0 1];Vb2=[1 0 0 0 1 0];%%整流级选择 26 15
@@ -330,18 +332,32 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
     
-    if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+    if(abs(Uc_A_1)<=abs(Uc_B_1)&&abs(Uc_A_1)<=abs(Uc_C_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小时，零矢量选择14，开关顺序为26 15 14 15 26
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_B_1)<=abs(Uc_A_1)&&abs(Uc_B_1)<=abs(Uc_A_1))
+        Vc2=[0 1 0 0 1 0];%%C像最小是，零矢量选择25，开关顺序为26 15 25 15 26
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_C_1)<abs(Uc_B_1)&&abs(Uc_C_1)<abs(Uc_A_1))
+        Vc2=[0  0 1 0 0 1];%%C相最小，零矢量选择36，开关顺序为15 26 36 26 15
+        Va2=[1 0 0 0 1 0];Vb2=[0 1 0 0 0 1];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
     end
     
+    if(g1>=g2)
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
+    end
+    
+    
         Va2=[1 0 0 0 0 1];Vb2=[1 0 0 0 1 0];%%整流级选择 16 15
-    Vdc_b=Uc_A_1+(-1)*Uc_C_1;
-    Vdc_a=Uc_B_1+(-1)*Uc_C_1;
+    Vdc_a=Uc_A_1+(-1)*Uc_C_1;
+    Vdc_b=Uc_A_1+(-1)*Uc_B_1;
     Ic_A_a=1*Idc;Ic_B_a=(0)*Idc;Ic_C_a=(-1)*Idc;%%%在整流级为100001时的Ic
-    Ic_A_b=1*Idc;Ic_B_b=0*Idc;Ic_C_b=(-1)*Idc;%%%在整流级为100001时的Ic
+    Ic_A_b=1*Idc;Ic_B_b=(-1)*Idc;Ic_C_b=(0)*Idc;%%%在整流级为100001时的Ic
     Ic_alphar_a=(2/3)* (Ic_A_a-(1/2)*Ic_B_a-(1/2)*Ic_C_a);      Ic_beta_a=(2/3)*((sqrt(3)/2)*Ic_B_a-(sqrt(3)/2)*Ic_C_a);
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1052*Uc_alphar_1+0.6558*Is_alphar+0.1052*Us_alphar+0.1338*Ic_alphar_a;
@@ -351,11 +367,23 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    
+    
+    
+    if(abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc2=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为16 15 25 15 16
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_B_1)>abs(Uc_C_1))
+        Vc2=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为15 16 36 16 15
+        Va2=[1 0 0 0 1 0];Vb2=[1 0 0 0 0 1];
+        db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc2=da2*Vdc_b+db2*Vdc_a;  %%Vdc对应原先的矢量，dadb相反
+    end
+      
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
     end
     
     
@@ -379,8 +407,18 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc=da*Vdc_a+db*Vdc_b;
+
+    
+    if(abs(Uc_A_1)>=abs(Uc_C_1))
+        Vc1=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为24 26 36 26 24
+        da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc=da*Vdc_a+db*Vdc_b;
+    elseif(abs(Uc_C_1)>abs(Uc_A_1))
+        Vc1=[1 0 0 1 0 0];%%零矢量选择14,开关顺序为26 24 14 24 26
+        Va1=[0 1 0 0 0 1];Vb1=[0 1 0 1 0 0];
+        db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc=db*Vdc_a+da*Vdc_b;
+    end
     
     Va2=[0 1 0 1 0 0];Vb2=[1 0 0 0 0 1];%%整流级选择24 16
     Vdc_a=Uc_B_1+(-1)*Uc_A_1;
@@ -397,11 +435,25 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_A_1)<=abs(Uc_B_1)&&abs(Uc_A_1)<=abs(Uc_C_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小时，零矢量选择14，开关顺序为24 16 14 16 24
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_C_1)<=abs(Uc_B_1)&&abs(Uc_C_1)<=abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%C像最小是，零矢量选择36，开关顺序为24 16 36 16 24
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_B_1)<abs(Uc_C_1)&&abs(Uc_B_1)<abs(Uc_A_1))
+        Vc2=[0 1 0 0 1 0];%%B相最小，零矢量选择25，开关顺序为16 24 25 24 16
+        Va2=[1 0 0 0 0 1];Vb2=[0 1 0 1 0 0];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
+    end
+        
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
     end
         
     
@@ -419,11 +471,21 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+
+    
+    if(abs(Uc_A_1)<=abs(Uc_B_1))
+        Vc2=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为26 16 14 16 25
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc2=da2*Vdc_a+db2*Vdc_b;
+    elseif(abs(Uc_A_1)>abs(Uc_B_1))
+        Vc2=[0 1 0 0 1 0];
+        Va2=[1 0 0 0 0 1];Vb2=[0 1 0 0 0 1];%%零矢量选择25，开关顺序为16 26 25 26 16
+        db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+        Vdc2=db2*Vdc_a+da2*Vdc_b;
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
     end
 
     
@@ -443,9 +505,17 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc1=[0 1 0 0 1 0];%%零矢量选择25，开关顺序选择34 24 25 24 34
+     da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
-    
+    elseif(abs(Uc_B_1)>abs(Uc_C_1))
+        Vc1=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为 24 34 36 34 24
+        Va1=[0 1 0 1 0 0];Vb1=[0 0 1 1 0 0];
+    db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc=db*Vdc_a+da*Vdc_b;
+    end
     
     
     Va2=[0 0 1 1 0 0];Vb2=[0 1 0 0 0 1];%%整流级选择34 26
@@ -462,11 +532,23 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    if(abs(Uc_B_1)<=abs(Uc_A_1)&&abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc2=[0 1 0 0 1 0];%%B相最小时，零矢量选择25，开关顺序为34 26 25 26 34
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_C_1)<=abs(Uc_B_1)&&abs(Uc_C_1)<=abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%C像最小是，零矢量选择36，开关顺序为34 26 36 26 34
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_A_1)<abs(Uc_C_1)&&abs(Uc_A_1)<abs(Uc_B_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小，零矢量选择14，开关顺序为26 34 14 34 26
+        Va2=[0 1 0 0 0 1];Vb2=[0 0 1 1 0 0];
+    da2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
     end
     
         Va2=[0 1 0 1 0 0];Vb2=[0 1 0 0 0 1];%%整流级选择24 26
@@ -483,11 +565,20 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_A_1)>=abs(Uc_C_1))
+        Vc2=[0 0 1 0 0 1];%%零矢量选择36 ，开关顺序为 24 26 36 26 24
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
-    
+    elseif(abs(Uc_A_1)<abs(Uc_C_1))
+        Vc2=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为26 24 14 24 26
+        Vb2=[0 1 0 1 0 0];Va2=[0 1 0 0 0 1];
+        db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b;
+    end
+        
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
     end
     
 elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S3,S4)以及(S3,S5),(S2,S4)AND(S3S4)(S2S4)
@@ -505,8 +596,18 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_A_1)<=abs(Uc_B_1))
+        Vc1=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为 35 34 14 34 35
     da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
+    elseif(abs(Uc_A_1)>abs(Uc_B_1))
+        Vc1=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为 34 35 25 35 34
+        Va1=[0 0 1 1 0 0];Vb1=[0 0 1 0 1 0];
+     db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc=db*Vdc_a+da*Vdc_b;
+    end
+    
     
     
     Va2=[0 0 1 0 1 0];Vb2=[0 1 0 1 0 0];%%整流级选择35 24
@@ -523,11 +624,24 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    
+    if(abs(Uc_A_1)<=abs(Uc_B_1)&&abs(Uc_A_1)<=abs(Uc_C_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小时，零矢量选择14，开关顺序为35 24 14 24 35
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_B_1)<=abs(Uc_A_1)&&abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc2=[0 1 0 0 1 0];%%B像最小是，零矢量选择25，开关顺序为35 24 25 24 35
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_C_1)<abs(Uc_B_1)&&abs(Uc_C_1)<abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%c相最小，零矢量选择25，开关顺序为24 35 36 35 24
+        Va2=[0 1 0 1 0 0];Vb2=[0 0 1 0 1 0];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
     end
     
     Va2=[0 0 1 1 0 0];Vb2=[0 1 0 1 0 0];%%整流级选择34 24
@@ -544,11 +658,20 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_C_1)>abs(Uc_B_1))
+        Vc2=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为34 24 25 24 34
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;   
+    elseif(abs(Uc_C_1)<=abs(Uc_B_1))
+        Vc2=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为24 34 36 34 24
+        Vb2=[0 0 1 1 0 0];Va2=[0 1 0 1 0 0];
+       db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b;    
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
     end
     
     
@@ -569,9 +692,17 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
-    da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_A_1)>=abs(Uc_C_1))
+        Vc1=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为15 35 36 35 15
+      da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
-    
+    elseif(abs(Uc_A_1)<abs(Uc_C_1))
+        Vc1=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为35 15 14 15 35
+    Va1=[0 0 1 0 1 0];Vb1=[1 0 0 0 1 0];
+    db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc=db*Vdc_a+da*Vdc_b;
+    end
     
     
     
@@ -589,11 +720,23 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    if(abs(Uc_A_1)<=abs(Uc_B_1)&&abs(Uc_A_1)<=abs(Uc_C_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小时，零矢量选择14，开关顺序为15 34 14 34 15
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_C_1)<=abs(Uc_B_1)&&abs(Uc_C_1)<=abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%C像最小是，零矢量选择36，开关顺序为15 34 36 34 15
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_B_1)<abs(Uc_C_1)&&abs(Uc_B_1)<abs(Uc_A_1))
+        Vc2=[0 1 0 0 1 0];%%B相最小，零矢量选择25，开关顺序为34 15 25 15 34
+        Va2=[0 0 1 1 0 0];Vb2=[1 0 0 0 1 0];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
+    end
     
         if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
         end
     
 Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
@@ -610,11 +753,21 @@ Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    
+     if(abs(Uc_A_1)<=abs(Uc_B_1))
+        Vc=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为35 34 14 34 35
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
+    elseif(abs(Uc_A_1)>abs(Uc_B_1))
+        Vc=[0 1 0 0 1 0];%%零矢量选择25，开关顺序为34 35 25 35 34
+    Va1=[0 0 1 1 0 0];Vb1=[0 0 1 0 1 0];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db*Vdc_a+da*Vdc_b;
+    end
     
         if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
         end
         
 elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S1,S5)以及(S1,S6),(S3,S5)and(s1s5)(s3s5)
@@ -632,9 +785,17 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g1=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    if(abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc1=[0 1 0 0 1 0];%%整流级零矢量选择25，开关顺序为16 15 25 15 16
     da=gb*gc/(ga*gc+gb*gc+ga*gb);db=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc=da*Vdc_a+db*Vdc_b;
-    
+    elseif(abs(Uc_C_1)<abs(Uc_B_1))
+        Vc1=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为15 16 36 16 15
+        Va1=[1 0 0 0 1 0];Vb1=[1 0 0 0 0 1];
+        db=gb*gc/(ga*gc+gb*gc+ga*gb);da=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc=db*Vdc_a+da*Vdc_b;
+    end
     
     Va2=[1 0 0 0 0 1];Vb2=[0 0 1 0 1 0];%%整流级选择16 35
     Vdc_a=Uc_A_1+(-1)*Uc_C_1;
@@ -650,11 +811,23 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+    if(abs(Uc_B_1)<=abs(Uc_A_1)&&abs(Uc_B_1)<=abs(Uc_C_1))
+        Vc2=[0 1 0 0 1 0];%%B相最小时，零矢量选择25，开关顺序为16 35 25 35 16
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
-    Vdc2=da2*Vdc_a+db2*Vdc_b;
+    Vdc2=da2*Vdc_a+db2*Vdc_b;    
+    elseif(abs(Uc_C_1)<=abs(Uc_B_1)&&abs(Uc_C_1)<=abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%C像最小是，零矢量选择36，开关顺序为16 35 36 35 16
+        da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=da2*Vdc_a+db2*Vdc_b; 
+    elseif(abs(Uc_A_1)<abs(Uc_C_1)&&abs(Uc_A_1)<abs(Uc_B_1))
+        Vc2=[1 0 0 1 0 0];%%A相最小，零矢量选择14，开关顺序为35 16 14 16 35
+        Va2=[0 0 1 0 1 0];Vb2=[1 0 0 0 0 1];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b; 
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;Vc1=Vc2;
     end
     
         Va2=[1 0 0 0 1 0];Vb2=[0 0 1 0 1 0];%%整流级选择15 35
@@ -671,11 +844,21 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Is_beta_b_1=-0.1052*Uc_beta_1+0.6558*Is_beta+0.1052*Us_beta+0.1338*Ic_beta_b;
     gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
     g2=(ga*gb*gc)/(ga*gc+gb*gc+ga*gb);
+
+    
+    if(abs(Uc_C_1)<abs(Uc_A_1))
+        Vc2=[0 0 1 0 0 1];%%零矢量选择36，开关顺序为15 35 36 35 15
     da2=gb*gc/(ga*gc+gb*gc+ga*gb);db2=ga*gc/(ga*gc+gb*gc+ga*gb);
     Vdc2=da2*Vdc_a+db2*Vdc_b;
+    elseif(abs(Uc_C_1)>=abs(Uc_A_1))
+    Vc2=[1 0 0 1 0 0];%%零矢量选择14，开关顺序为35 15 14 15 35
+    Va2=[0 0 1 0 1 0];Vb2=[1 0 0 0 1 0];
+    db2=gb*gc/(ga*gc+gb*gc+ga*gb);da2=ga*gc/(ga*gc+gb*gc+ga*gb);
+    Vdc2=db2*Vdc_a+da2*Vdc_b;
+    end
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;Vc1=Vc2;
     end
     
 end
