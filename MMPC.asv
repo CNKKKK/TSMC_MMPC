@@ -923,32 +923,53 @@ dc=1-da-db;
 %     h=[Vb1 Ic1 da db sector]; 
 % end
 
-%Vd=[0 0 0 0 0 0];%%%%recliter turn off
-y1=da*Da1/2;y2=da*Db1/2;y3=db*Db1/2;y4=db*Da1/2;y5=dc*Da1/2;y6=dc*Db1/2;
-if(rem(t,Ts/2)>=0&&rem(t,Ts/2)<Ts*(y1))
-    h=[Va1 Ia1 rem(t,Ts/2) 1 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts*(y1))&&rem(t,Ts/2)<Ts*(y1+y2))
-    h=[Va1 Ib1 rem(t,Ts/2) 2 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts*(y1+y2))&&rem(t,Ts/2)<Ts*(y1+y2+y3))
-    h=[Vb1 Ib1 rem(t,Ts/2) 3 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts*(y1+y2+y3))&&rem(t,Ts/2)<Ts*(y1+y2+y3+y4))
-    h=[Vb1 Ia1 rem(t,Ts/2) 4 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=Ts*(y1+y2+y3+y4)&&rem(t,Ts/2)<Ts*(y1+y2+y3+y4+y5))
-    h=[Vc1 Ia1 rem(t,Ts/2) 5 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=Ts*(y1+y2+y3+y4+y5)&&rem(t,Ts/2)<Ts/2)
-    h=[Vc1 Ib1 rem(t,Ts/2) 6 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts/2)&&rem(t,Ts/2)/2<(Ts/2+Ts*y6))
-    h=[Vc1 Ib1 rem(t,Ts/2) 7 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts/2+Ts*(y6))&&rem(t,Ts/2)<Ts/2+Ts*(y6+y5))
-    h=[Vc1 Ia1 rem(t,Ts/2) 8 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts/2)>=(Ts/2+Ts*(y6+y5))&&rem(t,Ts/2)<(Ts/2+Ts*(y6+y5+y4)))
-    h=[Vb1 Ia1 rem(t,Ts/2) 9 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts*2)>=(Ts/2+Ts*(y6+y5+y4))&&rem(t,Ts*2)<(Ts/2+Ts*(y6+y5+y4+y3)))
-    h=[Vb1 Ib1 rem(t,Ts*2) 10 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts*2)>=(Ts/2+Ts*(y6+y5+y4+y3))&&rem(t,Ts*2)<(Ts/2+Ts*(y6+y5+y4+y3+y2)))
-    h=[Va1 Ib1 rem(t,Ts*2) 11 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,Ts*2)>=(Ts/2+Ts*(y6+y5+y4+y3+y2))&&rem(t,Ts*2)<(Ts))
-    h=[Va1 Ia1 rem(t,Ts*2) 12 1/2-(y1+y2+y3+y4+y5+y6)];
+
+% y1=da*Da1;y2=da*Db1;y3=db*Db1;y4=db*Da1;y5=dc*Da1;y6=dc*Db1;%%%%%整流级零矢量代替逆变级零矢量
+% if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(y1))
+%     h=[Va1 Ia1 rem(t,2*Ts) 1 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts*(y1))&&rem(t,2*Ts)<Ts*(y1+y2))
+%     h=[Va1 Ib1 rem(t,2*Ts) 2 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts*(y1+y2))&&rem(t,2*Ts)<Ts*(y1+y2+y3))
+%     h=[Vb1 Ib1 rem(t,2*Ts) 3 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts*(y1+y2+y3))&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4))
+%     h=[Vb1 Ia1 rem(t,2*Ts) 4 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4)&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4+y5))
+%     h=[Vd1 Ia1 rem(t,2*Ts) 5 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4+y5)&&rem(t,2*Ts)<Ts)
+%     h=[Vd1 Ib1 rem(t,2*Ts) 6 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts)&&rem(t,2*Ts)<(Ts+Ts*y6))
+%     h=[Vd1 Ib1 rem(t,2*Ts) 7 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6))&&rem(t,2*Ts)<Ts+Ts*(y6+y5))
+%     h=[Vd1 Ia1 rem(t,2*Ts) 8 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4)))
+%     h=[Vb1 Ia1 rem(t,2*Ts) 9 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3)))
+%     h=[Vb1 Ib1 rem(t,2*Ts) 10 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3+y2)))
+%     h=[Va1 Ib1 rem(t,2*Ts) 11 1/2-(y1+y2+y3+y4+y5+y6)];
+% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3+y2))&&rem(t,2*Ts)<(2*Ts))
+%     h=[Va1 Ia1 rem(t,2*Ts) 12 1/2-(y1+y2+y3+y4+y5+y6)];
+% end
+
+Vd1=[0 0 0 0 0 0];%%%%recliter turn off
+if(rem(t,Ts)>=0&&rem(t,Ts)<Ts*dc/4)
+    h=[Vd1 Ia1 1 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*dc/4&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1))
+    h=[Va1 Ia1 2 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1))    
+    h=[Va1 Ib1 3 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da*Db1)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1))  
+    h=[Va1 Ia1 4 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc))  
+    h=[Vd1 Ia1 5 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc+1/2*db*Da1))  
+    h=[Vb1 Ia1 6 rem(t,Ts) sector]; 
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc+1/2*db*Da1)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc+1/2*db1*Da1+db*Db1))  
+    h=[Vb1 Ib1 7 rem(t,Ts) sector];
+elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc+1/2*db*Da1+db*Db1)&&rem(t,Ts)<Ts*(dc/4+1/2*da*Da1+da*Db1+1/2*da*Da1+1/2*dc+1/2*db*Da1+db*Db1+1/2*db*Db1))  
+    h=[Vb1 Ia1 8 rem(t,Ts) sector];  
+ elseif(rem(t,Ts)>=Ts*(dc/4+1/2*da*Da1+da1*Db1+1/2*da*Da1+1/2*dc+1/2*db*Da1+db*Db1+1/2*db*Db1)&&rem(t,Ts)<Ts)  
+    h=[Vd1 Ia1 9 rem(t,Ts) sector];
 end
 sys=h;
 end
