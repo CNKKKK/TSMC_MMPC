@@ -957,23 +957,23 @@ Vd1=[0 0 0 0 0 0];%%%%recliter turn off整流级零矢量使用全零，逆变级不使用零矢量
 a=Ts*dc/4;b=(1/2*da*Da1-1/4*dc)*Ts+a;c=b+da*Db1*Ts;d=c+(1/2*da*Da1-1/4*dc)*Ts;e=d+1/2*dc*Ts;
 f=e+Ts*(1/2*db*Da1-dc/4);g=f+db*Db1*Ts;h1=g+(1/2*db*Da1-dc/4)*Ts;i=h1+dc/4*Ts;
 if(rem(t,Ts)>=0&&rem(t,Ts)<a)
-    h=[Vd1 Ia1 1 rem(t,Ts) sector];
+    h=[Vd1 Ia1 1 b-a d-c];
 elseif(rem(t,Ts)>=a&&rem(t,Ts)<b)
-    h=[Va1 Ia1 2 rem(t,Ts) sector];
+    h=[Va1 Ia1 2 b-a d-c];
 elseif(rem(t,Ts)>=b&&rem(t,Ts)<c)    
-    h=[Va1 Ib1 3 rem(t,Ts) sector];
+    h=[Va1 Ib1 3 b-a d-c];
 elseif(rem(t,Ts)>=c&&rem(t,Ts)<d)  
-    h=[Va1 Ia1 4 rem(t,Ts) sector];
+    h=[Va1 Ia1 4 b-a d-c];
 elseif(rem(t,Ts)>=d&&rem(t,Ts)<e)  
-    h=[Vd1 Ia1 5 rem(t,Ts) sector];
+    h=[Vd1 Ia1 5 b-a d-c];
 elseif(rem(t,Ts)>=e&&rem(t,Ts)<f)  
-    h=[Vb1 Ia1 6 rem(t,Ts) sector]; 
+    h=[Vb1 Ia1 6 b-a d-c]; 
 elseif(rem(t,Ts)>=f&&rem(t,Ts)<g)  
-    h=[Vb1 Ib1 7 rem(t,Ts) sector];
+    h=[Vb1 Ib1 7 b-a d-c];
 elseif(rem(t,Ts)>=g&&rem(t,Ts)<h1)  
-    h=[Vb1 Ia1 8 rem(t,Ts) sector];  
+    h=[Vb1 Ia1 8 b-a sector];  
  elseif(rem(t,Ts)>=h1&&rem(t,Ts)<i)  
-    h=[Vd1 Ia1 9 rem(t,Ts) sector];
+    h=[Vd1 Ia1 9 b-a sector];
 end
 sys=h;
 end

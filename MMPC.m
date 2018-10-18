@@ -924,56 +924,59 @@ dc=1-da-db;
 % end
 
 
-% y1=da*Da1;y2=da*Db1;y3=db*Db1;y4=db*Da1;y5=dc*Da1;y6=dc*Db1;%%%%%整流级零矢量代替逆变级零矢量
-% if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(y1))
-%     h=[Va1 Ia1 rem(t,2*Ts) 1 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts*(y1))&&rem(t,2*Ts)<Ts*(y1+y2))
-%     h=[Va1 Ib1 rem(t,2*Ts) 2 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts*(y1+y2))&&rem(t,2*Ts)<Ts*(y1+y2+y3))
-%     h=[Vb1 Ib1 rem(t,2*Ts) 3 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts*(y1+y2+y3))&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4))
-%     h=[Vb1 Ia1 rem(t,2*Ts) 4 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4)&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4+y5))
-%     h=[Vd1 Ia1 rem(t,2*Ts) 5 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4+y5)&&rem(t,2*Ts)<Ts)
-%     h=[Vd1 Ib1 rem(t,2*Ts) 6 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts)&&rem(t,2*Ts)<(Ts+Ts*y6))
-%     h=[Vd1 Ib1 rem(t,2*Ts) 7 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6))&&rem(t,2*Ts)<Ts+Ts*(y6+y5))
-%     h=[Vd1 Ia1 rem(t,2*Ts) 8 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4)))
-%     h=[Vb1 Ia1 rem(t,2*Ts) 9 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3)))
-%     h=[Vb1 Ib1 rem(t,2*Ts) 10 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3+y2)))
-%     h=[Va1 Ib1 rem(t,2*Ts) 11 1/2-(y1+y2+y3+y4+y5+y6)];
-% elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3+y2))&&rem(t,2*Ts)<(2*Ts))
-%     h=[Va1 Ia1 rem(t,2*Ts) 12 1/2-(y1+y2+y3+y4+y5+y6)];
-% end
 
 Vd1=[0 0 0 0 0 0];%%%%recliter turn off整流级零矢量使用全零，逆变级不使用零矢量
+
+y1=da*Da1;y2=da*Db1;y3=db*Db1;y4=db*Da1;y5=dc*Da1;y6=dc*Db1;%%%%%整流级零矢量代替逆变级零矢量
+if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(y1))
+    h=[Va1 Ia1 rem(t,2*Ts) 1 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts*(y1))&&rem(t,2*Ts)<Ts*(y1+y2))
+    h=[Va1 Ib1 rem(t,2*Ts) 2 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts*(y1+y2))&&rem(t,2*Ts)<Ts*(y1+y2+y3))
+    h=[Vb1 Ib1 rem(t,2*Ts) 3 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts*(y1+y2+y3))&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4))
+    h=[Vb1 Ia1 rem(t,2*Ts) 4 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4)&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4+y5))
+    h=[Vc1 Ia1 rem(t,2*Ts) 5 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4+y5)&&rem(t,2*Ts)<Ts)
+    h=[Vc1 Ib1 rem(t,2*Ts) 6 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts)&&rem(t,2*Ts)<(Ts+Ts*y6))
+    h=[Vc1 Ib1 rem(t,2*Ts) 7 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(y6))&&rem(t,2*Ts)<Ts+Ts*(y6+y5))
+    h=[Vc1 Ia1 rem(t,2*Ts) 8 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4)))
+    h=[Vb1 Ia1 rem(t,2*Ts) 9 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3)))
+    h=[Vb1 Ib1 rem(t,2*Ts) 10 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3+y2)))
+    h=[Va1 Ib1 rem(t,2*Ts) 11 1/2-(y1+y2+y3+y4+y5+y6)];
+elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3+y2))&&rem(t,2*Ts)<(2*Ts))
+    h=[Va1 Ia1 rem(t,2*Ts) 12 1/2-(y1+y2+y3+y4+y5+y6)];
+end
+
+
 %%为了满足如一扇区整流级零矢量作用时，逆变级为100011，作用时间要严格遵循T逆a/T逆b=Da/Db
 %%作用时间重新分配
-a=Ts*dc/4;b=(1/2*da*Da1-1/4*dc)*Ts+a;c=b+da*Db1*Ts;d=c+(1/2*da*Da1-1/4*dc)*Ts;e=d+1/2*dc*Ts;
-f=e+Ts*(1/2*db*Da1-dc/4);g=f+db*Db1*Ts;h1=g+(1/2*db*Da1-dc/4)*Ts;i=h1+dc/4*Ts;
-if(rem(t,Ts)>=0&&rem(t,Ts)<a)
-    h=[Vd1 Ia1 1 i-Ts sector];
-elseif(rem(t,Ts)>=a&&rem(t,Ts)<b)
-    h=[Va1 Ia1 2 i-Ts sector];
-elseif(rem(t,Ts)>=b&&rem(t,Ts)<c)    
-    h=[Va1 Ib1 3 i-Ts sector];
-elseif(rem(t,Ts)>=c&&rem(t,Ts)<d)  
-    h=[Va1 Ia1 4 i-Ts sector];
-elseif(rem(t,Ts)>=d&&rem(t,Ts)<e)  
-    h=[Vd1 Ia1 5 i-Ts sector];
-elseif(rem(t,Ts)>=e&&rem(t,Ts)<f)  
-    h=[Vb1 Ia1 6 i-Ts sector]; 
-elseif(rem(t,Ts)>=f&&rem(t,Ts)<g)  
-    h=[Vb1 Ib1 7 i-Ts sector];
-elseif(rem(t,Ts)>=g&&rem(t,Ts)<h1)  
-    h=[Vb1 Ia1 8 i-Ts sector];  
- elseif(rem(t,Ts)>=h1&&rem(t,Ts)<i)  
-    h=[Vd1 Ia1 9 i-Ts sector];
-end
+% a=Ts*dc/4;b=(1/2*da*Da1)*Ts+a;c=b+da*Db1*Ts;d=c+(1/2*da*Da1)*Ts;e=d+1/2*dc*Ts;
+% f=e+Ts*(1/2*db*Da1);g=f+db*Db1*Ts;h1=g+(1/2*db*Da1)*Ts;i=h1+dc/4*Ts;
+% if(rem(t,Ts)>=0&&rem(t,Ts)<a)
+%     h=[Vc1 Ia1 1 b-a d-c];
+% elseif(rem(t,Ts)>=a&&rem(t,Ts)<b)
+%     h=[Va1 Ia1 2 b-a d-c];
+% elseif(rem(t,Ts)>=b&&rem(t,Ts)<c)    
+%     h=[Va1 Ib1 3 b-a d-c];
+% elseif(rem(t,Ts)>=c&&rem(t,Ts)<d)  
+%     h=[Va1 Ia1 4 b-a d-c];
+% elseif(rem(t,Ts)>=d&&rem(t,Ts)<e)  
+%     h=[Vd1 Ia1 5 b-a d-c];
+% elseif(rem(t,Ts)>=e&&rem(t,Ts)<f)  
+%     h=[Vb1 Ia1 6 b-a d-c]; 
+% elseif(rem(t,Ts)>=f&&rem(t,Ts)<g)  
+%     h=[Vb1 Ib1 7 b-a d-c];
+% elseif(rem(t,Ts)>=g&&rem(t,Ts)<h1)  
+%     h=[Vb1 Ia1 8 b-a d-c];  
+%  elseif(rem(t,Ts)>=h1&&rem(t,Ts)<i)  
+%     h=[Vc1 Ia1 9 b-a d-c];
+% end
 sys=h;
 end
