@@ -127,7 +127,7 @@ sita=atan(Uc_beta_1/Uc_alphar_1);
       gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
 %       Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];%%常规逆变级零矢量
 Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
-      Da1=(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
+      Da1=0.66*(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=0.66*(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
     Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);%%%常规逆变级带有零矢量方式的作用时间
 
 
@@ -151,12 +151,12 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
 %       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[1 0 0 0 1 1];Id2=[0 1 1 1 0 0];%%逆变端由两个反矢量代替零矢量结果
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
+      Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=2;
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;k1=k2;
+        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;
     end
    
          %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
@@ -177,12 +177,12 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
 %      Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[1 1 0 0 0 1];Id2=[0 0 1 1 1 0];%%逆变端由两个反矢量代替零矢量结果
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
+      Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=3;
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;k1=k2;
+        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;
     end    
  
           
@@ -206,12 +206,12 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       Ic2=[0 1 0 1 0 1];Id2=[1 0 1 0 1 0];%%逆变端由两个反矢量代替零矢量结果
       
       
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
+      Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=4;
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;k1=k2;
+        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;
     end  
     
          %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
@@ -232,12 +232,12 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
 %       Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[0 1 1 1 0 0];Id2=[1 0 0 0 1 1];%%逆变端由两个反矢量代替零矢量结果
-%       Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
+      Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
 %     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
-Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=5;
+% Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=5;
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;k1=k2;
+        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;
     end 
     
          %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
@@ -259,12 +259,12 @@ Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=5;
 %       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
 Ic2=[0 0 1 1 1 0];Id2=[1 1 0 0 0 1];%%逆变端由两个反矢量代替零矢量结果
 
-      Da2=(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
+      Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=6;
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;k1=k2;
+        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Id1=Id2;Da1=Da2;Db1=Db2;
     end  
 
 Idc=Da1*(Ia1(1)*Io_A_1+Ia1(2)*Io_B_1+Ia1(3)*Io_C_1)+Db1*(Ib1(1)*Io_A_1+Ib1(2)*Io_B_1+Ib1(3)*Io_C_1);
@@ -887,89 +887,62 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
 end
 dc=1-da-db;
 
-% if(rem(t,Ts)>=0&&rem(t,Ts)<Ts/2*(Dc1/8))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%16steps
-%     h=[Va Ic1 1 Vdc k];
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1))
-%     h=[Va Ia1 2 Vdc k];
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1+da*Db1))
-%     h=[Va Ib1 3 Vdc k];
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1+da*Db1)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/8))
-%     h=[Va Id1 4 Vdc k];
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/8)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4))
-%     h=[Vb Id1 5 Vdc k];
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4+db*Da1))
-%     h=[Vb Ib1 6 Vdc k];   
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4+db*Da1)&&rem(t,Ts)<Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4+db*Da1+db*Db1))
-%     h=[Vb Ia1 7 Vdc k]; 
-% elseif(rem(t,Ts)>=Ts/2*(Dc1/8+da*Da1+da*Db1+Dc1/4+db*Da1+db*Db1)&&rem(t,Ts)<(Ts/2))
-%     h=[Vb Ic1 8 Vdc k];        
-% elseif(rem(t,Ts)>=(Ts/2)&&rem(t,Ts)<(Ts/2+Ts/2*Dc1/8))
-%     h=[Vb Ic1 9 Vdc k];   
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*Dc1/8)&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1)))
-%     h=[Vb Ia1 10 Vdc k];       
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1)))
-%     h=[Vb Ib1 11 Vdc k];  
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8)))
-%     h=[Vb Id1 12 Vdc k]; 
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/4)))
-%     h=[Va Id1 13 Vdc k];
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/4))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1)))
-%     h=[Va Ib1 14 Vdc k];
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1+da*Da1)))
-%     h=[Va Ia1 15 Vdc k];
-% elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1+da*Da1))&&rem(t,Ts)<(Ts))
-%     h=[Va Ic1 16 Vdc k];
-% end
+if(rem(t,Ts)>=0&&rem(t,Ts)<Ts/2*(da*Dc1/8))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%16steps
+    h=[Va1 Ic1 1 Vdc sector];
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1))
+    h=[Va1 Ia1 2 Vdc sector];
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1+da*Db1))
+    h=[Va1 Ib1 3 Vdc sector];
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1+da*Db1)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1+da*Db1+da*Dc1/8))
+    h=[Va1 Id1 4 Vdc sector];
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1+da*Db1+da*Dc1/8)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8))
+    h=[Vb1 Id1 5 Vdc sector];
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8+db*Da1))
+    h=[Vb1 Ib1 6 Vdc sector];   
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8+db*Da1)&&rem(t,Ts)<Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8+db*Da1+db*Db1))
+    h=[Vb1 Ia1 7 Vdc sector]; 
+elseif(rem(t,Ts)>=Ts/2*(da*Dc1/8+da*Da1+da*Db1+Dc1/8+db*Da1+db*Db1)&&rem(t,Ts)<(Ts/2))
+    h=[Vb1 Ic1 8 Vdc sector];        
+elseif(rem(t,Ts)>=(Ts/2)&&rem(t,Ts)<(Ts/2+Ts/2*Dc1/8))
+    h=[Vb1 Ic1 9 Vdc sector];   
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*Dc1/8)&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1)))
+    h=[Vb1 Ia1 10 Vdc sector];       
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1)))
+    h=[Vb1 Ib1 11 Vdc sector];  
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8)))
+    h=[Vb1 Id1 12 Vdc sector]; 
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/4)))
+    h=[Va1 Id1 13 Vdc sector];
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/4))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1)))
+    h=[Va1 Ib1 14 Vdc sector];
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1))&&rem(t,Ts)<(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1+da*Da1)))
+    h=[Va1 Ia1 15 Vdc sector];
+elseif(rem(t,Ts)>=(Ts/2+Ts/2*(Dc1/8+db*Db1+db*Da1+Dc1/8+da*Db1+da*Da1))&&rem(t,Ts)<(Ts))
+    h=[Va1 Ic1 16 Vdc sector];
+end
 % 
 
-% if(rem(t,Ts)>=0&&rem(t,Ts)<Ts*(Dc1/4))%%%%%%%%%%%%%%%%%%%%%%%%%%eight steps 
-%     h=[Va1 Ic1 da db sector];
+% if(rem(t,Ts)>=0&&rem(t,Ts)<Ts*(Dc1/4))%%%%%%%%%%%%%%%%%%%%%%%%%%eight steps 可供逆变级零矢量，逆变级两个方向相反大作用时间相等的矢量合成
+%     h=[Va1 Ic1 1 Dc1 sector];
 % elseif(rem(t,Ts)>=Ts*(Dc1/4)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1))
-%     h=[Va1 Ia1 da db sector];
+%     h=[Va1 Ia1 2 Dc1 sector];
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1+da*Db1))
-%     h=[Va1 Ib1 da db sector];
+%     h=[Va1 Ib1 3 Dc1 sector];
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1+da*Db1)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1+da*Db1+Dc1/4))
-%     h=[Va1 Id1 da db sector];
+%     h=[Va1 Id1 4 Dc1 sector];
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1+da*Db1+Dc1/4)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2))
-%     h=[Vb1 Id1 da db sector];
+%     h=[Vb1 Id1 5 Dc1 sector];
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2+db*Da1))
-%     h=[Vb1 Ib1 da db sector];   
+%     h=[Vb1 Ib1 6 Dc1 sector];   
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2+db*Da1)&&rem(t,Ts)<Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2+db*Da1+db*Db1))
-%     h=[Vb1 Ia1 da db sector]; 
+%     h=[Vb1 Ia1 7 Dc1 sector]; 
 % elseif(rem(t,Ts)>=Ts*(Dc1/4+da*Da1+da*Db1+Dc1/2+db*Da1+db*Db1)&&rem(t,Ts)<(Ts))
-%     h=[Vb1 Ic1 da db sector]; 
+%     h=[Vb1 Ic1 8 Dc1 sector]; 
 % end
 
 
 
-Vd1=[0 0 0 0 0 0];%%%%recliter turn off整流级零矢量使用全零，逆变级不使用零矢量
 
-y1=da*Da1;y2=da*Db1;y3=db*Db1;y4=db*Da1;y5=dc*Da1;y6=dc*Db1;%%%%%整流级零矢量代替逆变级零矢量
-if(rem(t,2*Ts)>=0&&rem(t,2*Ts)<Ts*(y1))
-    h=[Va1 Ia1 rem(t,2*Ts) 1 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts*(y1))&&rem(t,2*Ts)<Ts*(y1+y2))
-    h=[Va1 Ib1 rem(t,2*Ts) 2 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts*(y1+y2))&&rem(t,2*Ts)<Ts*(y1+y2+y3))
-    h=[Vb1 Ib1 rem(t,2*Ts) 3 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts*(y1+y2+y3))&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4))
-    h=[Vb1 Ia1 rem(t,2*Ts) 4 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4)&&rem(t,2*Ts)<Ts*(y1+y2+y3+y4+y5))
-    h=[Vc1 Ia1 rem(t,2*Ts) 5 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=Ts*(y1+y2+y3+y4+y5)&&rem(t,2*Ts)<Ts)
-    h=[Vc1 Ib1 rem(t,2*Ts) 6 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts)&&rem(t,2*Ts)<(Ts+Ts*y6))
-    h=[Vc1 Ib1 rem(t,2*Ts) 7 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(y6))&&rem(t,2*Ts)<Ts+Ts*(y6+y5))
-    h=[Vc1 Ia1 rem(t,2*Ts) 8 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4)))
-    h=[Vb1 Ia1 rem(t,2*Ts) 9 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3)))
-    h=[Vb1 Ib1 rem(t,2*Ts) 10 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3))&&rem(t,2*Ts)<(Ts+Ts*(y6+y5+y4+y3+y2)))
-    h=[Va1 Ib1 rem(t,2*Ts) 11 1/2-(y1+y2+y3+y4+y5+y6)];
-elseif(rem(t,2*Ts)>=(Ts+Ts*(y6+y5+y4+y3+y2))&&rem(t,2*Ts)<(2*Ts))
-    h=[Va1 Ia1 rem(t,2*Ts) 12 1/2-(y1+y2+y3+y4+y5+y6)];
-end
 
 
 %%为了满足如一扇区整流级零矢量作用时，逆变级为100011，作用时间要严格遵循T逆a/T逆b=Da/Db
