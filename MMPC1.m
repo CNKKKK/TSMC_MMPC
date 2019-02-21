@@ -1,4 +1,4 @@
-function [sys,x0,str,ts] = MMPC1(t,x,u,flag)
+function [sys,x0,str,ts] = MMPC1(t,x,u,flag)%%逆变级用两个相反矢量合成零矢量
 switch flag,
   case 0,
     [sys,x0,str,ts]=mdlInitializeSizes;
@@ -52,7 +52,7 @@ end
 
 Ts=0.0001;Rf=2; Lf=0.0004; Cf=21e-6; Rs=2; Ls=0.02;%%若修改周期求取Is（K+1)的状态方程系数也需相应的修改
 % % K1=0;K2=0; %%%%%K1 reactive power K2 source current
-% 
+   k3=0.01;
 % 
 % 
 % 
@@ -87,21 +87,27 @@ Is_alphar=(2/3)* (Is_A-(1/2)*Is_B-(1/2)*Is_C);      Is_beta=(2/3)*(sqrt(3)/2)*(I
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%逆变级的遍历
      %%%%%%%S1 S5 S6 以及S1 S2 S6 开启%%%%
-    Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
+%     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
+    Uo_A_1=Vdc;Uo_B_1=-Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia1=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
+      ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia1=[1 0 0 0 1 1];
+%      Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib1=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib1=[1 1 0 0 0 1];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
 %       Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];%%常规逆变级零矢量
 Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       Da1=0.83*(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=0.83*(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
@@ -110,21 +116,27 @@ k1=1;
 
     
          %%%%%%%S1 S2 S6 以及S4 S2 S6 开启
-    Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
+%     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 1 0 0 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia2=[1 1 0 0 0 1];
+%      Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
+    Uo_A_1=-Vdc;Uo_B_1=Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib2=[0 1 0 1 0 1];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
 %       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[1 0 0 0 1 1];Id2=[0 1 1 1 0 0];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.83*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.83*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
@@ -136,21 +148,27 @@ k2=2;
     end
    
          %%%%%%%S4 S2 S6 以及S4 S2 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
+%     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
+    Uo_A_1=-Vdc;Uo_B_1=Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 0 1 0 1];
-     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia2=[0 1 0 1 0 1];
+%      Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+     Uo_A_1=-Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib2=[0 1 1 1 0 0];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
 %      Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[1 1 0 0 0 1];Id2=[0 0 1 1 1 0];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.83*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.83*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
@@ -163,21 +181,27 @@ k2=3;
 
           
          %%%%%%%S4 S2 S3 以及S4 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+%     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+    Uo_A_1=-Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 1 1 1 0 0];
-     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia2=[0 1 1 1 0 0];
+%      Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+    Uo_A_1=-Vdc;Uo_B_1=-Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib2=[0 0 1 1 1 0];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
 %       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
       Ic2=[0 1 0 1 0 1];Id2=[1 0 1 0 1 0];%%逆变端由两个反矢量代替零矢量结果
       
@@ -192,21 +216,27 @@ k2=4;
     end  
   
          %%%%%%%S4 S5 S3 以及S1 S5 S3 开启
-    Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+%     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+    Uo_A_1=-Vdc;Uo_B_1=-Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[0 0 1 1 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia2=[0 0 1 1 1 0];
+%      Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
+    Uo_A_1=Vdc;Uo_B_1=-Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib2=[1 0 1 0 1 0];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+     Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
 %       Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量t
       Ic2=[0 1 1 1 0 0];Id2=[1 0 0 0 1 1];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.83*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.83*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
@@ -219,21 +249,27 @@ k2=5;
     end 
     
          %%%%%%%S1 S5 S3 以及S1 S5 S6 开启
-    Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
+%     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
+    Uo_A_1=Vdc;Uo_B_1=-Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ia2=[1 0 1 0 1 0];
-     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ia2=[1 0 1 0 1 0];
+%      Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
+    Uo_A_1=Vdc;Uo_B_1=-Vdc;Uo_C_1=-Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);Ib2=[1 0 0 0 1 1];
-     Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;Ib2=[1 0 0 0 1 1];
+%      Uo_A_1=(1/3)*(2-1-1)*Vdc;Uo_B_1=(1/3)*(-1+2-1)*Vdc;Uo_C_1=(1/3)*(-1-1+2)*Vdc;%%%%逆变级零适量
+    Uo_A_1=Vdc;Uo_B_1=Vdc;Uo_C_1=Vdc;
+    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
+      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k3*Vng;
      
 %       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量r
 Ic2=[0 0 1 1 1 0];Id2=[1 1 0 0 0 1];%%逆变端由两个反矢量代替零矢量结果

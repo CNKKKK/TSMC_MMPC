@@ -1,4 +1,4 @@
-function [sys,x0,str,ts] = MMPC2(t,x,u,flag)%%逆变级由三个矢量合成
+function [sys,x0,str,ts] = MMPC3(t,x,u,flag)%%逆变级双矢量，整流级零矢量选择[000000]
 switch flag,
   case 0,
     [sys,x0,str,ts]=mdlInitializeSizes;
@@ -43,16 +43,16 @@ Is_A=u(4); Is_B=u(5); Is_C=u(6);
 Uc_A_1=u(7); Uc_B_1=u(8); Uc_C_1=u(9);%%%%%%kshik
 Io_A_1=u(10); Io_B_1=u(11); Io_C_1=u(12);
 Io_A_g=u(13); Io_B_g=u(14); Io_C_g=u(15);
- h=[0 0 0 0 0 0 1 1 1 1 1 1 0 0 0];
+ h=[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0];
 persistent Vdc;
 
 if isempty(Vdc)%%为第一次Vdc做准备
-Vdc=120;
+Vdc=180;
 end
 
 Ts=0.0001;Rf=2; Lf=0.0004; Cf=21e-6; Rs=2; Ls=0.02;%%若修改周期求取Is（K+1)的状态方程系数也需相应的修改
 % % K1=0;K2=0; %%%%%K1 reactive power K2 source current
-k1=0.01;
+landa=0.8;k1=0.01;
 % 
 % 
 % 
@@ -122,223 +122,173 @@ k1=0.01;
 %%%%%逆变级的遍历%%%%%%
  %%%%%%%S1 S5 S6 以及S1 S2 S6 开启以及S1 S5 S3%%%%
 %     Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(2-1*0-1*0)*Vdc;%%%%逆变级S1 S5 S6
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(0-1);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(0-1);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);    
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       ga1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia1=[1 0 0 0 1 1];
 %      Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1); 
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);    
      Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gb1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib1=[1 1 0 0 0 1];
-%      Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic1=[1 0 1 0 1 0];
-      Q1=(ga1*gb1*gc1)/(ga1*gb1+ga1*gc1+gb1*gc1);
+k=1;
+      Q1=(ga1*gb1)/(ga1+gb1);
 %       Db1=1-landa*cos(sita)+landa/sqrt(3)*sin(sita);
 %       Da1=-1+2*landa*cos(sita);
 %       Dc1=1-landa*cos(sita)-landa/sqrt(3)*sin(sita);
-      Dc1=gb1*ga1/(ga1*gb1+ga1*gc1+gc1*gb1);
-      Da1=gb1*gc1/(ga1*gb1+ga1*gc1+gc1*gb1);
-      Db1=gc1*ga1/(ga1*gb1+ga1*gc1+gc1*gb1);
-      k=1;
+      Da1=gb1/(ga1+gb1);
+      Db1=ga1/(gb1+ga1);
       
                %%%%%%%S1 S2 S6 以及S4 S2 S6 以及S1 S5 S6开启
 %     Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级S1 S2 S6
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[1 1 0 0 0 1];
 %      Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic2=[0 1 0 1 0 1];
-%      Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(0-1);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[1 0 0 0 1 1];
-      Q2=(ga2*gb2*gc2)/(ga2*gb2+ga2*gc2+gb2*gc2);
-%         sita1=pi/3-sita;
-%       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
-%       Da2=-1+2*landa*cos(sita1);
-%       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
-      Dc2=gb2*ga2/(ga2*gb2+ga2*gc2+gc2*gb2);
-      Da2=gb2*gc2/(ga2*gb1+ga2*gc2+gc2*gb2);
-      Db2=gc2*ga2/(ga2*gb2+ga2*gc2+gc2*gb2);
-    if(Q1<=Q2)
-        k=1;
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Da1=Da2;Db1=Db2;Dc1=Dc2;Q1=Q2;k=2;
-    end
-    
- 
-      
-        %%%%%%%S4 S2 S6 以及S4 S2 S3 以及S1 S2 S6开启
-%     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 1 0 1 0 1];
-%      Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(1-0);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic2=[0 1 1 1 0 0];
-%      Uo_A_1=(1/3)*(2-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1+2*0)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[1 1 0 0 0 1];
-      Q2=(ga2*gb2*gc2)/(ga2*gb2+ga2*gc2+gb2*gc2);
-%      sita1=pi/3-sita;
-%       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
-%       Da2=-1+2*landa*cos(sita1);
-%       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
-      Dc2=gb2*ga2/(ga2*gb2+ga2*gc2+gc2*gb2);
-      Da2=gb2*gc2/(ga2*gb1+ga2*gc2+gc2*gb2);
-      Db2=gc2*ga2/(ga2*gb2+ga2*gc2+gc2*gb2);
-    if(Q1<=Q2)
-    else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Da1=Da2;Db1=Db2;Dc1=Dc2;Q1=Q2;k=3;
-    end 
-    
- 
-
-         %%%%%%%S4 S2 S3 以及S4 S5 S3 以及S4 S2 S6开启
-%     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(1-0);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 1 1 1 0 0];
-%      Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic2=[0 0 1 1 1 0];
-%      Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
+     Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
      Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[0 1 0 1 0 1];
-      Q2=(ga2*gb2*gc2)/(ga2*gb2+ga2*gc2+gb2*gc2);
-%      sita1=pi/3-sita;
+      Q2=(ga2*gb2)/(ga2+gb2);
+%         sita1=pi/3-sita;
 %       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
 %       Da2=-1+2*landa*cos(sita1);
 %       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
-          Dc2=ga2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Da2=gc2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Db2=gc2*ga2/(ga2*gb2+gb2*gc2+ga2*gc2);
+      Da2=gb2/(gb2+ga2);
+      Db2=ga2/(gb2+ga2);
     if(Q1<=Q2)
+        k=1;
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Da1=Da2;Db1=Db2;Dc1=Dc2;Q1=Q2;k=4;
-    end  
+        Ia1=Ia2;Ib1=Ib2;Da1=Da2;Db1=Db2;Q1=Q2;k=2;
+    end
     
-            
       
-         %%%%%%%S4 S5 S3 以及S1 S5 S3 以及S4 S2 S3开启
-%     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+        %%%%%%%S4 S2 S6 以及S4 S2 S3 以及S1 S2 S6开启
+%     Uo_A_1=(1/3)*(2*0-1-1*0)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1*0)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2*0)*Vdc;%%%%逆变级S4 S2 S6
+      Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(0-1);
+      Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 0 1 1 1 0];
-%      Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic2=[1 0 1 0 1 0];
-%      Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(1-0);
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 1 0 1 0 1];
+%      Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+     Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(1-0);
      Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[0 1 1 1 0 0];
-      Q2=(ga2*gb2*gc2)/(ga2*gb2+ga2*gc2+gb2*gc2);
+      Q2=(ga2*gb2)/(ga2+gb2);
 %      sita1=pi/3-sita;
 %       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
 %       Da2=-1+2*landa*cos(sita1);
 %       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
-          Dc2=ga2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Da2=gc2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Db2=gc2*ga2/(ga2*gb2+gb2*gc2+ga2*gc2);
+      
+      Da2=gb2/(gb2+ga2);
+      Db2=ga2/(gb2+ga2);
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Da1=Da2;Db1=Db2;Dc1=Dc2;Q1=Q2;k=5;
-    end  
-    
+        Ia1=Ia2;Ib1=Ib2;Da1=Da2;Db1=Db2;Q1=Q2;k=3;
+    end 
       
+
+         %%%%%%%S4 S2 S3 以及S4 S5 S3 以及S4 S2 S6开启
+%     Uo_A_1=(1/3)*(2*0-1-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1+2)*Vdc;%%%%逆变级S4 S2 S3
+     Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(1-0);Uo_C_1=Vdc*(1-0);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
+     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
+     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 1 1 1 0 0];
+%      Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+     Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
+     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
+     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[0 0 1 1 1 0];
+      Q2=(ga2*gb2)/(ga2+gb2);
+%      sita1=pi/3-sita;
+%       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
+%       Da2=-1+2*landa*cos(sita1);
+%       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
+          
+     Da2=gb2/(gb2+ga2);
+     Db2=ga2/(gb2+ga2);
+    if(Q1<=Q2)
+    else
+        Ia1=Ia2;Ib1=Ib2;Da1=Da2;Db1=Db2;Q1=Q2;k=4;
+    end  
+       
+      
+         %%%%%%%S4 S5 S3 以及S1 S5 S3 以及S4 S2 S3开启
+%     Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级S4 S5 S3
+     Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
+     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
+     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
+      ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[0 0 1 1 1 0];
+%      Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
+     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
+     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[1 0 1 0 1 0];
+      Q2=(ga2*gb2)/(ga2+gb2);
+%      sita1=pi/3-sita;
+%       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
+%       Da2=-1+2*landa*cos(sita1);
+%       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
+          
+     Da2=gb2/(gb2+ga2);
+     Db2=ga2/(gb2+ga2);
+    if(Q1<=Q2)
+    else
+        Ia1=Ia2;Ib1=Ib2;Da1=Da2;Db1=Db2;Q1=Q2;k=5;
+    end  
+      
+
          %%%%%%%S1 S5 S3 以及S1 S5 S6 以及S4 S5 S3开启
 %     Uo_A_1=(1/3)*(2-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2)*Vdc;%%%%逆变级S1 S5 S3
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-    Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
+     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       ga2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ia2=[1 0 1 0 1 0];
 %      Uo_A_1=(1/3)*(2-1*0-1*0)*Vdc;Uo_B_1=(1/3)*(-1+2*0-1*0)*Vdc;Uo_C_1=(1/3)*(-1-1*0+2*0)*Vdc;%%%%逆变级S1 S5 S6
-    Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(0-1);
+     Uo_A_1=Vdc*(1-0);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(0-1);
      Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
      Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
-      gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ic2=[1 0 0 0 1 1];
-%      Uo_A_1=(1/3)*(2*0-1*0-1)*Vdc;Uo_B_1=(1/3)*(-1*0+2*0-1)*Vdc;Uo_C_1=(1/3)*(-1*0-1*0+2)*Vdc;%%%%逆变级零适量
-    Uo_A_1=Vdc*(0-1);Uo_B_1=Vdc*(0-1);Uo_C_1=Vdc*(1-0);
-     Vng=abs(Uo_A_1+Uo_B_1+Uo_C_1)/3;
-     Io_A_2=1/(Ls)*((Ls-Ts*Rs)*Io_A_1+Ts*Uo_A_1);
-     Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
-     Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);Ib2=[0 0 1 1 1 0];
-      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;
-      Q2=(ga2*gb2*gc2)/(ga2*gb2+ga2*gc2+gb2*gc2);
+      gb2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2)+k1*Vng;Ib2=[1 0 0 0 1 1];
+      Q2=(ga2*gb2)/(ga2+gb2);
 %      sita1=pi/3-sita;
 %       Db2=1-landa*cos(sita1)+landa/sqrt(3)*sin(sita1);
 %       Da2=-1+2*landa*cos(sita1);
 %       Dc2=1-landa*cos(sita1)-landa/sqrt(3)*sin(sita1);
-          Dc2=ga2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Da2=gc2*gb2/(ga2*gb2+gb2*gc2+ga2*gc2);
-     Db2=gc2*ga2/(ga2*gb2+gb2*gc2+ga2*gc2);
+          
+     Da2=gb2/(gb2+ga2);
+     Db2=ga2/(gb2+ga2);
     if(Q1<=Q2)
     else
-        Ia1=Ia2;Ib1=Ib2;Ic1=Ic2;Da1=Da2;Db1=Db2;Dc1=Dc2;Q1=Q2;k=6;
+        Ia1=Ia2;Ib1=Ib2;Da1=Da2;Db1=Db2;Q1=Q2;k=6;
     end  
     
-    
 
-
-
-Idc=Da1*(Ia1(1)*Io_A_1+Ia1(2)*Io_B_1+Ia1(3)*Io_C_1)+Db1*(Ib1(1)*Io_A_1+Ib1(2)*Io_B_1+Ib1(3)*Io_C_1)+Dc1*(Ic1(1)*Io_A_1+Ic1(2)*Io_B_1+Ic1(3)*Io_C_1);
+Idc=Da1*(Ia1(1)*Io_A_1+Ia1(2)*Io_B_1+Ia1(3)*Io_C_1)+Db1*(Ib1(1)*Io_A_1+Ib1(2)*Io_B_1+Ib1(3)*Io_C_1);
 
 
 %%整流级也运用mpc选择的思想，将输入电压的1扇区变化为（0，3/Π）%%
@@ -378,7 +328,7 @@ Us_alphar=(2/3)* (Us_A-(1/2)*Us_B-(1/2)*Us_C);      Us_beta=(2/3)*(sqrt(3)/2)*(U
     end
     
     
-    %%Ic=[整流]*Idc;Is(k+1)=A*Is(测量）+B*Us(测量）+C*Uc(测量）+D*Ic(计算）;g=abs(Qs*-Qs)^2;da=ga/(ga+gb);！！！！！
+    %%Ic=[整流]*Idc;Is(k+1)=A*Is(测量）+B*Us(测量）+C*Uc(测量）+D*Ic(计算）;g=abs(Qs*-Qs)^2;da=(gb*gc)/(ga*gb+ga*gc+gb*gc);！！！！！
    
 
 if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S6)以及(S1,S5),(S2,S6)；（S1S5) (S1S6)
@@ -391,13 +341,16 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Ic_alphar_b=(2/3)*(Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
      Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
      Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=(ga*gb)/(ga+gb);    
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+     Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+     Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1);    
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);    
 
-    db=ga/(ga+gb);da=gb/(ga+gb);
+    db=(ga*gc)/(ga*gb+ga*gc+gb*gc);da=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
     Vdc=da*Vdc_a+db*Vdc_b;
     j1=1;
     
@@ -412,19 +365,22 @@ if(sector==1)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S6),(S1,S
     Ic_alphar_b=(2/3)*(Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=(ga*gb)/(ga+gb); 
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc); 
     
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 j2=2;
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
     end
     
     
@@ -437,21 +393,24 @@ j2=2;
     Ic_alphar_b=(2/3)*(Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
     
     
     j2=3;
 
-        db2=ga/(ga+gb);da2=gb/(ga+gb);
+        db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
         Vdc2=da2*Vdc_a+db2*Vdc_b;  
       
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
     end
     
     
@@ -470,14 +429,17 @@ elseif(sector==2)%%为了保证直流环节为postive，可选择的整流级开关状态为（S2,S4),(
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j1=1;
 
-        db=ga/(ga+gb);da=gb/(ga+gb);
+        db=(ga*gc)/(ga*gb+ga*gc+gb*gc);da=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
         Vdc=da*Vdc_a+db*Vdc_b;
 
     
@@ -491,20 +453,23 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j2=2;
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
         
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
     end
         
     
@@ -517,20 +482,23 @@ j2=2;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
     j2=3;
 
-        db2=ga/(ga+gb);da2=gb/(ga+gb);
+        db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
         Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
     end
 
     
@@ -545,14 +513,17 @@ elseif(sector==3)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S4),(
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j1=1;
 
-    da=gb/(ga+gb);db=ga/(ga+gb);
+    da=(gb*gc)/(ga*gb+ga*gc+gb*gc);db=(ga*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
     Vdc=da*Vdc_a+db*Vdc_b;
 
     
@@ -566,18 +537,21 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     j2=2;
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
     end
     
         Va2=[0 1 0 1 0 0];Vb2=[0 1 0 0 0 1];%%整流级选择24 26
@@ -589,19 +563,22 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
 
-        db2=ga/(ga+gb);da2=gb/(ga+gb);
+        db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
         j2=3;
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
     end
     
 elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(S3,S4)以及(S3,S5),(S2,S4)AND(S3S4)(S2S4)
@@ -614,14 +591,17 @@ elseif(sector==4)%%为了保证直流环节为postive，可选择的整流级开关状态为（S3,S5),(
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j1=1;
 
-     db=ga/(ga+gb);da=gb/(ga+gb);
+     db=(ga*gc)/(ga*gb+ga*gc+gb*gc);da=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
     Vdc=da*Vdc_a+db*Vdc_b;
 
     
@@ -636,19 +616,22 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
     j2=2;
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
     end
     
     Va2=[0 0 1 1 0 0];Vb2=[0 1 0 1 0 0];%%整流级选择34 24
@@ -660,18 +643,21 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j2=3;
-db2=ga/(ga+gb);da2=gb/(ga+gb);
+db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;   
 
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
     end
     
     
@@ -687,14 +673,17 @@ elseif(sector==5)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S5),(
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j1=1;
 
-    da=gb/(ga+gb);db=ga/(ga+gb);
+    da=(gb*gc)/(ga*gb+ga*gc+gb*gc);db=(ga*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
     Vdc=da*Vdc_a+db*Vdc_b;
 
     
@@ -709,18 +698,21 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b; 
 
     j2=2;
         if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
         end
     
 Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
@@ -732,20 +724,23 @@ Va2=[0 0 1 0 1 0];Vb2=[0 0 1 1 0 0];%%整流级选择35 34
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
     j2=3;
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     
         if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
         end
         
 elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(S1,S5)以及(S1,S6),(S3,S5)and(s1s5)(s3s5)
@@ -758,14 +753,17 @@ elseif(sector==6)%%为了保证直流环节为postive，可选择的整流级开关状态为（S1,S6),(
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g1=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g1=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j1=1;
 
-        db=ga/(ga+gb);da=gb/(ga+gb);
+        db=(ga*gc)/(ga*gb+ga*gc+gb*gc);da=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc=1-da-db;
     Vdc=da*Vdc_a+db*Vdc_b;
 
     
@@ -778,18 +776,21 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     j2=2;
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;g1=g2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;g1=g2;j1=j2;
     end
     
         Va2=[1 0 0 0 1 0];Vb2=[0 0 1 0 1 0];%%整流级选择15 35
@@ -801,62 +802,81 @@ j1=1;
     Ic_alphar_b=(2/3)* (Ic_A_b-(1/2)*Ic_B_b-(1/2)*Ic_C_b);      Ic_beta_b=(2/3)*((sqrt(3)/2)*Ic_B_b-(sqrt(3)/2)*Ic_C_b);
      Is_alphar_a_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_a;
      Is_beta_a_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_a;
-     ga=(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1)^2;
+     ga=abs(Us_alphar*Is_beta_a_1-Us_beta*Is_alphar_a_1);
     Is_alphar_b_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*Ic_alphar_b;
     Is_beta_b_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*Ic_beta_b;
-    gb=(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1)^2;
-    g2=ga*gb/(ga+gb);
+    gb=abs(Us_alphar*Is_beta_b_1-Us_beta*Is_alphar_b_1);
+    Is_alphar_c_1=-0.1601*Uc_alphar_1+0.2192*Is_alphar+0.1601*Us_alphar+0.4606*0;
+    Is_beta_c_1=-0.1601*Uc_beta_1+0.2192*Is_beta+0.1601*Us_beta+0.4606*0;
+    gc=abs(Us_alphar*Is_beta_c_1-Us_beta*Is_alphar_c_1); 
+    g2=(ga*gb*gc)/(ga*gb+ga*gc+gb*gc);
 j2=3;
     
 
-    db2=ga/(ga+gb);da2=gb/(ga+gb);
+    db2=(ga*gc)/(ga*gb+ga*gc+gb*gc);da2=(gb*gc)/(ga*gb+ga*gc+gb*gc);dc2=1-da2-db2;
     Vdc2=da2*Vdc_a+db2*Vdc_b;
 
     
     if(g1>=g2)
-        Va1=Va2;Vb1=Vb2;da=da2;db=db2;Vdc=Vdc2;j1=j2;
+        Va1=Va2;Vb1=Vb2;da=da2;db=db2;dc=dc2;Vdc=Vdc2;j1=j2;
     end
     
 end
+Vc1=[0 0 0 0 0 0];
+%%%矢量切换点的计算%%%%%%
+a=dc/4*Ts;
+b=a+1/2*Ts*da*Da1;
+c=b+Ts*da*Db1;
+d=c+1/2*Ts*da*Da1;
+e=d+1/2*dc*Ts;
+f=e+1/2*Ts*db*Da1;
+g=f+Ts*db*Db1;
+h=g+1/2*Ts*db*Da1;
 % if(rem(t,Ts)>=0&&rem(t,Ts)<Ts/2*(da*Dc1/2))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%16steps
-%     h=[Va1 Ic1 Da1 Db1 Dc1];
+%     h=[Va1 Ic1 Da1 e-f];
 % elseif(rem(t,Ts)>=Ts/2*(da*Dc1/2)&&rem(t,Ts)<Ts/2*(da*Dc1/2+da*Da1/2))
-%     h=[Va1 Ia1 Da1 Db1 Dc1];
+%     h=[Va1 Ia1 Da1 e-f];
 % elseif(rem(t,Ts)>=Ts/2*(da*Dc1/2+da*Da1/2)&&rem(t,Ts)<Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2))
-%     h=[Va1 Ib1 Da1 Db1 Dc1];
+%     h=[Va1 Ib1 Da1 e-f];
 % elseif(rem(t,Ts)>=Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2)&&rem(t,Ts)<Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2+db*Db1/2))
-%     h=[Vb1 Ib1 Da1 Db1 Dc1];
+%     h=[Vb1 Ib1 Da1 e-f];
 % elseif(rem(t,Ts)>=Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2+db*Db1/2)&&rem(t,Ts)<Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2+db*Db1/2+db*Da1/2))
-%     h=[Vb1 Ia1 Da1 Db1 Dc1];    
+%     h=[Vb1 Ia1 Da1 e-f];    
 % elseif(rem(t,Ts)>=Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2+db*Db1/2+db*Da1/2)&&rem(t,Ts)<Ts/2*(da*Dc1/2+da*Da1/2+da*Db1/2+db*Db1/2+db*Da1/2+db*Dc1/2))
-%     h=[Vb1 Ic1 Da1 Db1 Dc1]; 
+%     h=[Vb1 Ic1 Da1 e-f]; 
 % elseif(rem(t,Ts)>=Ts/2&&rem(t,Ts)<(Ts/2+Ts/2*(db*Dc1/2)))
-%     h=[Vb1 Ic1 Da1 Db1 Dc1];  
+%     h=[Vb1 Ic1 Da1 e-f];  
 % elseif(rem(t,Ts)>=(Ts/2+Ts/2*(db*Dc1/2))&&rem(t,Ts)<(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2)))
-%     h=[Vb1 Ia1 Da1 Db1 Dc1];  
+%     h=[Vb1 Ia1 Da1 e-f];  
 % elseif(rem(t,Ts)>=(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2))&&rem(t,Ts)<(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2)))
-%     h=[Vb1 Ib1 Da1 Db1 Dc1]; 
+%     h=[Vb1 Ib1 Da1 e-f]; 
 % elseif(rem(t,Ts)>=(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2))&&rem(t,Ts)<(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2+da*Db1/2)))
-%     h=[Va1 Ib1 Da1 Db1 Dc1];
+%     h=[Va1 Ib1 Da1 e-f];
 % elseif(rem(t,Ts)>=(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2+da*Db1/2))&&rem(t,Ts)<(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2+da*Db1/2+da*Da1/2)))
-%     h=[Va1 Ia1 Da1 Db1 Dc1];
+%     h=[Va1 Ia1 Da1 e-f];
 % elseif(rem(t,Ts)>=(Ts/2+Ts/2*(db*Dc1/2+db*Da1/2+db*Db1/2+da*Db1/2+da*Da1/2))&&rem(t,Ts)<(Ts/2+Ts/2))
-%     h=[Va1 Ic1 Da1 Db1 Dc1];
+%     h=[Va1 Ic1 Da1 e-f];
 % end
 
 
-if(rem(t,Ts)>=0&&rem(t,Ts)<Ts*(da*Dc1))%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%6steps
-    h=[Va1 Ic1 k Vdc Vng];
-elseif(rem(t,Ts)>=Ts*(da*Dc1)&&rem(t,Ts)<Ts*(da*Dc1+da*Da1))
-    h=[Va1 Ia1 k Vdc Vng];
-elseif(rem(t,Ts)>=Ts*(da*Dc1+da*Da1)&&rem(t,Ts)<Ts*(da*Dc1+da*Da1+da*Db1))
-    h=[Va1 Ib1 k Vdc Vng];
-elseif(rem(t,Ts)>=Ts*(da*Dc1+da*Da1+da*Db1)&&rem(t,Ts)<Ts*(da*Dc1+da*Da1+da*Db1+db*Db1))
-    h=[Vb1 Ib1 k Vdc Vng];
-elseif(rem(t,Ts)>=Ts*(da*Dc1+da*Da1+da*Db1+db*Db1)&&rem(t,Ts)<Ts*(da*Dc1+da*Da1+da*Db1+db*Db1+db*Da1))
-    h=[Vb1 Ia1 k Vdc Vng];    
-elseif(rem(t,Ts)>=Ts*(da*Dc1+da*Da1+da*Db1+db*Db1+db*Da1)&&rem(t,Ts)<Ts*(da*Dc1+da*Da1+da*Db1+db*Db1+db*Da1+db*Dc1))
-    h=[Vb1 Ic1 k Vdc Vng];
+if(rem(t,Ts)>=0&&rem(t,Ts)<a)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%6steps
+    h=[Vc1 Ia1 Vng sector j1];
+elseif(rem(t,Ts)>=a&&rem(t,Ts)<b)
+    h=[Va1 Ia1 Vng sector j1];
+elseif(rem(t,Ts)>=b&&rem(t,Ts)<c)
+    h=[Va1 Ib1 Vng sector j1];
+elseif(rem(t,Ts)>=c&&rem(t,Ts)<d)
+    h=[Va1 Ia1 Vng sector j1];
+elseif(rem(t,Ts)>=d&&rem(t,Ts)<e)
+    h=[Vc1 Ia1 Vng sector j1];    
+elseif(rem(t,Ts)>=e&&rem(t,Ts)<f)
+    h=[Vb1 Ia1 Vng sector j1];
+elseif(rem(t,Ts)>=f&&rem(t,Ts)<g)
+    h=[Vb1 Ib1 Vng sector j1];
+elseif(rem(t,Ts)>=g&&rem(t,Ts)<h)
+    h=[Vb1 Ia1 Vng sector j1];
+else
+    h=[Vc1 Ia1 Vng sector j1];
 end
 
 

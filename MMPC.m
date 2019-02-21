@@ -1,4 +1,4 @@
-function [sys,x0,str,ts] = MMPC(t,x,u,flag)
+function [sys,x0,str,ts] = MMPC(t,x,u,flag)%%%整流级有零矢量1.零矢量为100100以及2.000000
 switch flag,
   case 0,
     [sys,x0,str,ts]=mdlInitializeSizes;
@@ -125,8 +125,8 @@ sita=atan(Uc_beta_1/Uc_alphar_1);
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc1=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%       Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];%%常规逆变级零矢量
-Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
+      Ic1=[0 0 0 1 1 1]; Id1=[1 1 1 0 0 0];%%常规逆变级零矢量
+% Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
       Da1=0.66*(gb1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Db1=0.66*(ga1*gc1)/(gb1*gc1+ga1*gc1+gb1*ga1);Dc1=1-Da1-Db1;
     Q1=(ga1*gb1*gc1)/(ga1*gb1+gb1*gc1+gc1*ga1);%%%常规逆变级带有零矢量方式的作用时间
 
@@ -149,8 +149,8 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
-      Ic2=[1 0 0 0 1 1];Id2=[0 1 1 1 0 0];%%逆变端由两个反矢量代替零矢量结果
+      Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
+%       Ic2=[1 0 0 0 1 1];Id2=[0 1 1 1 0 0];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=2;
@@ -175,8 +175,8 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%      Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
-      Ic2=[1 1 0 0 0 1];Id2=[0 0 1 1 1 0];%%逆变端由两个反矢量代替零矢量结果
+     Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
+%       Ic2=[1 1 0 0 0 1];Id2=[0 0 1 1 1 0];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=3;
@@ -202,8 +202,8 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
-      Ic2=[0 1 0 1 0 1];Id2=[1 0 1 0 1 0];%%逆变端由两个反矢量代替零矢量结果
+      Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
+%       Ic2=[0 1 0 1 0 1];Id2=[1 0 1 0 1 0];%%逆变端由两个反矢量代替零矢量结果
       
       
       Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
@@ -230,8 +230,8 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%       Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
-      Ic2=[0 1 1 1 0 0];Id2=[1 0 0 0 1 1];%%逆变端由两个反矢量代替零矢量结果
+      Ic2=[0 0 0 1 1 1]; Id2=[1 1 1 0 0 0];%%常规逆变级零矢量
+%       Ic2=[0 1 1 1 0 0];Id2=[1 0 0 0 1 1];%%逆变端由两个反矢量代替零矢量结果
       Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
 %     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
 % Da2=gb2/(ga2+gb2);Db2=ga2/(ga2+gb2);Q2=(ga2*gb2)/(ga2+gb2);k2=5;
@@ -256,8 +256,8 @@ Ic1=[1 0 1 0 1 0];Id1=[0 1 0 1 0 1];%%逆变端由两个反矢量代替零矢量结果
      Io_B_2=1/(Ls)*((Ls-Ts*Rs)*Io_B_1+Ts*Uo_B_1);
      Io_C_2=1/(Ls)*((Ls-Ts*Rs)*Io_C_1+Ts*Uo_C_1);
       gc2=abs(Io_A_g-Io_A_2)+abs(Io_B_g-Io_B_2)+abs(Io_C_g-Io_C_2);
-%       Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
-Ic2=[0 0 1 1 1 0];Id2=[1 1 0 0 0 1];%%逆变端由两个反矢量代替零矢量结果
+      Id2=[0 0 0 1 1 1]; Ic2=[1 1 1 0 0 0];%%常规逆变级零矢量
+% Ic2=[0 0 1 1 1 0];Id2=[1 1 0 0 0 1];%%逆变端由两个反矢量代替零矢量结果
 
       Da2=0.66*(gb2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Db2=0.66*(ga2*gc2)/(gb2*gc2+ga2*gc2+gb2*ga2);Dc2=1-Da2-Db2;
     Q2=(ga2*gb2*gc2)/(ga2*gb2+gb2*gc2+gc2*ga2);
